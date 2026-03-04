@@ -1,0 +1,42 @@
+<section id="participants" class="participants">
+  <div class="container">
+    <app-section-header
+      badge="Join Our Network"
+      title="Who Can Participate?"
+      subtitle="Our platform connects three key stakeholders, each playing a vital role in the medicine donation ecosystem."
+    />
+
+    <div class="participants__grid">
+      @for (p of participants; track p.title) {
+        <div class="participant-card">
+          <!-- Icon -->
+          <div class="participant-card__icon">
+            <i [class]="p.icon"></i>
+          </div>
+
+          <!-- Content -->
+          <div class="participant-card__content">
+            <span class="participant-card__subtitle">{{ p.subtitle }}</span>
+            <h3 class="participant-card__title text-h4">{{ p.title }}</h3>
+            <p class="participant-card__desc text-sm">{{ p.description }}</p>
+
+            <!-- Features list -->
+            <ul class="participant-card__features">
+              @for (feat of p.features; track feat) {
+                <li class="participant-card__feature">
+                  <span class="participant-card__dot"></span>
+                  {{ feat }}
+                </li>
+              }
+            </ul>
+          </div>
+
+          <!-- CTA Button -->
+          <a [routerLink]="p.buttonRoute" class="participant-card__btn btn btn-primary">
+            {{ p.buttonText }}
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</section>

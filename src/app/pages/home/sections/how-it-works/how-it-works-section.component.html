@@ -1,0 +1,29 @@
+<section id="how-it-works" class="how-it-works">
+  <div class="container">
+    <app-section-header
+      badge="Simple Process"
+      title="How It Works"
+      subtitle="Our streamlined process ensures safe, efficient medicine donations from donors to those in need."
+    />
+
+    <div class="how-it-works__grid">
+      @for (step of steps; track step.number) {
+        <div class="step-card">
+          <!-- Icon + Number row -->
+          <div class="step-card__top">
+            <div class="step-card__icon-wrap">
+              <i [class]="step.icon"></i>
+            </div>
+            <span class="step-card__number">{{ step.number }}</span>
+          </div>
+
+          <!-- Text -->
+          <div class="step-card__body">
+            <h4 class="step-card__title text-h4">{{ step.title }}</h4>
+            <p class="step-card__desc text-sm">{{ step.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

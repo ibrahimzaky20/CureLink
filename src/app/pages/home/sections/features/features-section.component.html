@@ -1,0 +1,21 @@
+<section id="features" class="features">
+  <div class="container">
+    <app-section-header
+      badge="Platform Features"
+      title="Built for Trust & Efficiency"
+      subtitle="Our platform combines cutting-edge technology with healthcare expertise to ensure safe, compliant, and impactful medicine donations."
+    />
+
+    <div class="features__grid">
+      @for (feature of features; track feature.title) {
+        <div class="feature-card">
+          <div class="feature-card__icon">
+            <i [class]="feature.icon"></i>
+          </div>
+          <h4 class="feature-card__title text-h4">{{ feature.title }}</h4>
+          <p class="feature-card__desc text-sm">{{ feature.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+.section-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 700px;
+  margin: 0 auto;
+
+  &__title {
+    color: #0F172A;
+  }
+
+  &__subtitle {
+    color: var(--color-gray);
+    max-width: 640px;
+  }
+
+  &--light {
+    .section-header__title { color: #fff; }
+    .section-header__subtitle { color: rgba(255,255,255,0.8); }
+
+    .section-badge {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.3);
+      color: #fff;
+    }
+  }
+}

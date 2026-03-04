@@ -1,0 +1,37 @@
+.stats-banner {
+  background: var(--gradient-primary);
+  padding: 60px 0;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+
+    @media (max-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 480px) { grid-template-columns: 1fr; }
+  }
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #fff;
+
+  &__value {
+    font-family: 'Rubik', sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  &__sublabel {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+}

@@ -1,0 +1,22 @@
+<app-navbar />
+<main class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-card__title text-h2">Sign In</h1>
+    <p class="auth-card__subtitle text-sm">Welcome back to CureLink</p>
+    <form class="auth-card__form">
+      <label class="auth-label">
+        Email
+        <input type="email" class="auth-input" placeholder="you@example.com" />
+      </label>
+      <label class="auth-label">
+        Password
+        <input type="password" class="auth-input" placeholder="••••••••" />
+      </label>
+      <button type="submit" class="btn btn-primary w-full">Sign In</button>
+    </form>
+    <p class="auth-card__footer text-xs">
+      Don't have an account? <a routerLink="/auth/register" class="auth-link">Register</a>
+    </p>
+  </div>
+</main>
+<app-footer />

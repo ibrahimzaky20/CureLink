@@ -1,0 +1,51 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h2 class="auth-card__title text-2xl font-semibold">Create an Account</h2>
+    <p class="auth-card__subtitle text-sm">Join CureLink and start making a difference today.</p>
+
+    <form class="auth-card__form" (submit)="$event.preventDefault()">
+      <div class="auth-row">
+        <label class="auth-label">
+          First Name
+          <input class="auth-input" type="text" placeholder="John" autocomplete="given-name" />
+        </label>
+        <label class="auth-label">
+          Last Name
+          <input class="auth-input" type="text" placeholder="Doe" autocomplete="family-name" />
+        </label>
+      </div>
+
+      <label class="auth-label">
+        Email Address
+        <input class="auth-input" type="email" placeholder="you@example.com" autocomplete="email" />
+      </label>
+
+      <label class="auth-label">
+        Role
+        <select class="auth-input auth-select">
+          <option value="" disabled selected>Select your role</option>
+          <option value="donor">Individual Donor</option>
+          <option value="institution">Medical Institution</option>
+          <option value="admin">Administrator</option>
+        </select>
+      </label>
+
+      <label class="auth-label">
+        Password
+        <input class="auth-input" type="password" placeholder="Create a password" autocomplete="new-password" />
+      </label>
+
+      <label class="auth-label">
+        Confirm Password
+        <input class="auth-input" type="password" placeholder="Repeat your password" autocomplete="new-password" />
+      </label>
+
+      <button type="submit" class="btn btn-primary w-full mt-2">Create Account</button>
+    </form>
+
+    <p class="auth-card__footer text-sm">
+      Already have an account?
+      <a routerLink="/auth/login" class="auth-link">Sign in</a>
+    </p>
+  </div>
+</div>

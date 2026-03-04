@@ -1,1 +1,111 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'tailwindcss';
+
+/* ─── Design Tokens ────────────────────────────────────── */
+:root {
+  --color-primary:        #14B8A6;
+  --color-primary-dark:   #0D9488;
+  --color-primary-light:  #E7F9F7;
+  --color-primary-border: #C1E6E3;
+  --color-gray:           #65758B;
+  --color-dark:           #0F172A;
+  --color-footer-bg:      #1d2530;
+  --color-text:           #1E293B;
+  --gradient-primary:     linear-gradient(135deg, #2DD4BF 0%, #3B82F6 100%);
+  --shadow-card:          0 0 12px 0 rgba(0, 0, 0, 0.10);
+}
+
+/* ─── Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  color: var(--color-text);
+  background: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+}
+
+p { margin: 0; }
+a { text-decoration: none; color: inherit; }
+
+/* ─── Typography utilities ─────────────────────────────── */
+.text-h1   { font-family: 'Rubik', sans-serif; font-size: 48px; font-weight: 700; line-height: 1; }
+.text-h2   { font-family: 'Rubik', sans-serif; font-size: 40px; font-weight: 600; line-height: 1; }
+.text-h4   { font-family: 'Rubik', sans-serif; font-size: 24px; font-weight: 500; line-height: 1; }
+.text-lg   { font-size: 20px; font-weight: 400; line-height: 30px; }
+.text-md   { font-size: 18px; font-weight: 400; line-height: 28px; }
+.text-sm   { font-size: 16px; font-weight: 400; line-height: 24px; }
+.text-xs   { font-size: 14px; font-weight: 400; line-height: 20px; }
+.text-btn  { font-size: 16px; font-weight: 600; line-height: 1; }
+
+/* ─── Container ────────────────────────────────────────── */
+.container {
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* ─── Badge ────────────────────────────────────────────── */
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--color-primary-light);
+  border: 1px solid var(--color-primary-border);
+  border-radius: 99px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-primary-dark);
+}
+
+/* ─── Buttons ──────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 28px;
+  height: 56px;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn:hover { opacity: 0.9; }
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #fff;
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary-dark);
+  border: 1.5px solid var(--color-primary-dark);
+}
+.btn-dark {
+  background: var(--color-dark);
+  color: #fff;
+}
+.btn-outline-white {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.7);
+}
+.btn-white {
+  background: #fff;
+  color: var(--color-primary-dark);
+}
+
+/* ─── Scrollbar ────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: var(--color-primary-border); border-radius: 3px; }

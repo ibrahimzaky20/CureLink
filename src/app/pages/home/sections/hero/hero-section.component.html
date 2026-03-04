@@ -1,0 +1,52 @@
+<section class="hero">
+  <div class="container hero__inner">
+
+    <!-- Top content block -->
+    <div class="hero__top">
+      <div class="hero__heading-group">
+        <!-- Badge -->
+        <div class="hero__badge">
+          <span class="hero__badge-dot"></span>
+          connecting surplus medicine to those in need
+        </div>
+
+        <!-- Heading -->
+        <h1 class="hero__title">
+          Every Medicine <span class="hero__title-accent">Deserves a Purpose</span>
+        </h1>
+      </div>
+
+      <!-- Subtitle -->
+      <p class="hero__subtitle">
+        Bridge the gap between surplus medications and healthcare institutions in need.
+        Safe, verified, and efficient medicine donations that save lives.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="hero__actions">
+        <a routerLink="/auth/register" class="btn btn-primary">
+          Donate Medicine&nbsp;<i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a routerLink="/auth/register" class="btn btn-secondary">
+          Register Institution
+        </a>
+      </div>
+    </div>
+
+    <!-- Mini Stats -->
+    <div class="hero__stats">
+      @for (stat of stats; track stat.label) {
+        <div class="hero__stat-card">
+          <div class="hero__stat-icon">
+            <i [class]="stat.icon"></i>
+          </div>
+          <div class="hero__stat-info">
+            <span class="hero__stat-label">{{ stat.label }}</span>
+            <span class="hero__stat-sublabel">{{ stat.sublabel }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>

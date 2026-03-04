@@ -1,0 +1,9 @@
+<div class="section-header" [class.section-header--light]="light">
+  @if (badge) {
+    <span class="section-badge">{{ badge }}</span>
+  }
+  <h2 class="section-header__title text-h2">{{ title }}</h2>
+  @if (subtitle) {
+    <p class="section-header__subtitle text-md">{{ subtitle }}</p>
+  }
+</div>
