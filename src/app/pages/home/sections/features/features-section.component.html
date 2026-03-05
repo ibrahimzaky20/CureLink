@@ -10,7 +10,7 @@
       @for (feature of features; track feature.title) {
         <div class="feature-card">
           <div class="feature-card__icon">
-            <i [class]="feature.icon"></i>
+            <iconify-icon [icon]="feature.icon" width="24" height="24"></iconify-icon>
           </div>
           <h4 class="feature-card__title text-h4">{{ feature.title }}</h4>
           <p class="feature-card__desc text-sm">{{ feature.description }}</p>

@@ -24,7 +24,7 @@
 
     <!-- Mobile hamburger -->
     <button class="navbar__hamburger" (click)="toggleMobile()" aria-label="Toggle menu">
-      <i [class]="mobileOpen() ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'"></i>
+      <iconify-icon [icon]="mobileOpen() ? 'lucide:x' : 'lucide:menu'" width="22" height="22"></iconify-icon>
     </button>
   </div>
 

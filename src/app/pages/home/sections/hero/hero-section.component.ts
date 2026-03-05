@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-hero-section',
   imports: [RouterLink],
   templateUrl: './hero-section.component.html',
-  styleUrl: './hero-section.component.scss'
+  styleUrl: './hero-section.component.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HeroSectionComponent {
   readonly stats = [
-    { icon: 'fa-solid fa-shield-halved', label: 'Verified & Safe',  sublabel: 'Quality assured' },
-    { icon: 'fa-solid fa-users',         label: '10K+ Donors',      sublabel: 'Active community' },
-    { icon: 'fa-solid fa-building',      label: '500+ Partners',    sublabel: 'Healthcare facilities' }
+    { icon: 'material-symbols:security', label: 'Verified & Safe',   sublabel: 'Quality assured' },
+    { icon: 'lucide:users',              label: '10K+ Donors',       sublabel: 'Active community' },
+    { icon: 'solar:buildings-2-linear',  label: '500+ Partners',     sublabel: 'Healthcare facilities' }
   ];
 }

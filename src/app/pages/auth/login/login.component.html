@@ -1,22 +1,100 @@
-<app-navbar />
-<main class="auth-page">
-  <div class="auth-card">
-    <h1 class="auth-card__title text-h2">Sign In</h1>
-    <p class="auth-card__subtitle text-sm">Welcome back to CureLink</p>
-    <form class="auth-card__form">
-      <label class="auth-label">
-        Email
-        <input type="email" class="auth-input" placeholder="you@example.com" />
-      </label>
-      <label class="auth-label">
-        Password
-        <input type="password" class="auth-input" placeholder="••••••••" />
-      </label>
-      <button type="submit" class="btn btn-primary w-full">Sign In</button>
-    </form>
-    <p class="auth-card__footer text-xs">
-      Don't have an account? <a routerLink="/auth/register" class="auth-link">Register</a>
-    </p>
+<div class="auth-split">
+
+  <!-- Left: Gradient Panel -->
+  <div class="auth-split__panel">
+    <div class="panel-inner">
+      <h2 class="panel-title">Create Your Account</h2>
+      <p class="panel-subtitle">Join a community that believes unused medicine can still save lives</p>
+      <a routerLink="/auth/register" class="panel-btn">Register</a>
+    </div>
   </div>
-</main>
-<app-footer />
+
+  <!-- Right: Form Side -->
+  <div class="auth-split__form">
+    <div class="form-logo">CureLink</div>
+
+    <div class="form-body">
+      <h1 class="form-title">Welcome back</h1>
+
+      <form (submit)="$event.preventDefault()">
+
+        <!-- Email -->
+        <div class="field">
+          <label class="field-label">Email</label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+            </span>
+            <input type="email" class="field-input" placeholder="name@example.com" />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <label class="field-label">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <input [type]="showPassword ? 'text' : 'password'" class="field-input" placeholder="Inter your password" />
+            <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember + Forgot -->
+        <div class="form-options">
+          <label class="remember-label">
+            <input type="checkbox" class="remember-check" />
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot-link">forgot password?</a>
+        </div>
+
+        <!-- Or Divider -->
+        <div class="or-divider">Or</div>
+
+        <!-- Social Buttons -->
+        <div class="social-row">
+          <button type="button" class="social-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </svg>
+          </button>
+          <button type="button" class="social-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20" height="20">
+              <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-3.9z" />
+              <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" />
+              <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z" />
+              <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9z" />
+            </svg>
+          </button>
+          <button type="button" class="social-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#000">
+              <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09z" />
+              <path d="M15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn">+ Sign in &rarr;</button>
+
+      </form>
+    </div>
+  </div>
+
+</div>
