@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -7,4 +7,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   templateUrl: './for-donor.component.html',
   styleUrl: './for-donor.component.scss'
 })
-export class ForDonorComponent {}
+export class ForDonorComponent {
+  mobileOpen = signal(false);
+  toggleMobile() { this.mobileOpen.update(v => !v); }
+  closeMobile()  { this.mobileOpen.set(false); }
+}
