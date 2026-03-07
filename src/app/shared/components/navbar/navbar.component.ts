@@ -20,8 +20,8 @@ export class NavbarComponent {
 
   readonly navItems: NavItem[] = [
     { label: 'How It Works',    route: '/', fragment: 'how-it-works' },
-    { label: 'For Donors',      route: '/ForDonor', fragment: 'for-donor' },
-    { label: 'For Institutions', route: '/ForInstitution', fragment: 'for-institution' },
+    { label: 'For Donors',      route: '/for-donor', fragment: 'for-donor' },
+    { label: 'For Institutions', route: '/for-institution', fragment: 'for-institution' },
     { label: 'About',           route: '/about' }
   ];
 

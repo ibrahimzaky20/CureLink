@@ -1,0 +1,356 @@
+/* ── Page Header ── */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-family: 'Rubik', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--color-gray);
+}
+
+
+/* ── Stat Cards ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-card);
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--color-gray);
+}
+
+.stat-value {
+  font-family: 'Rubik', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.1;
+  margin: 4px 0 2px;
+}
+
+.stat-note {
+  font-size: 12px;
+  color: var(--color-gray);
+}
+
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.teal {
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+  }
+
+  &.amber {
+    background: #FFFBEB;
+    color: #F59E0B;
+  }
+}
+
+/* ── Middle Grid ── */
+.middle-grid {
+  display: grid;
+  grid-template-columns: 1fr 370px;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* ── Card ── */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-family: 'Rubik', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-all {
+  font-size: 13px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover { text-decoration: underline; }
+}
+
+/* ── Donations Table ── */
+.donations-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-gray);
+    text-align: center;
+    padding: 8px 8px 12px;
+    white-space: nowrap;
+  }
+
+  td {
+    text-align: center;
+    padding: 14px 8px;
+    font-size: 13px;
+    color: var(--color-text);
+    border-top: 1px solid #F1F5F9;
+  }
+
+  .med-name { font-weight: 500; text-align: left; }
+  .qty-col { color: var(--color-primary); font-weight: 500; }
+  .date-col { color: var(--color-gray); }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.delivered {
+    color: var(--color-primary-dark);
+    background: var(--color-primary-light);
+    border: 1px solid var(--color-primary-border);
+  }
+
+  &.approved {
+    color: var(--color-primary-dark);
+    background: var(--color-primary-light);
+    border: 1px solid var(--color-primary-border);
+  }
+
+  &.pending {
+    color: #92400E;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+  }
+}
+
+/* ── Progress Track ── */
+.progress-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #CBD5E1;
+  background: #fff;
+  color: #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &.active {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: #fff;
+  }
+}
+
+.track-line {
+  width: 20px;
+  height: 2px;
+  background: #CBD5E1;
+
+  &.active { background: var(--color-primary); }
+}
+
+.step-num {
+  font-size: 11px;
+  font-weight: 600;
+  color: #CBD5E1;
+  line-height: 1;
+}
+
+/* ── Urgent Needs ── */
+.urgent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.urgent-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+
+  &.critical { background: #FFF1F1; border: 1px solid #FECACA; }
+  &.high { background: #FFFBEB; border: 1px solid #FDE68A; }
+  &.moderate { background: var(--color-primary-light); border: 1px solid var(--color-primary-border); }
+}
+
+.urgent-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.urgent-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.urgent-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.urgent-units {
+  font-size: 12px;
+  color: var(--color-gray);
+}
+
+.urgency-badge {
+  font-size: 12px;
+  font-weight: 600;
+
+  &.critical { color: #EF4444; }
+  &.high { color: #F59E0B; }
+  &.moderate { color: var(--color-primary); }
+}
+
+
+/* ── Impact Card ── */
+.impact-card {
+  margin-bottom: 0;
+}
+
+.impact-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 24px;
+
+  svg { margin-top: 2px; flex-shrink: 0; }
+}
+
+.impact-subtitle {
+  font-size: 13px;
+  color: var(--color-gray);
+  margin-top: 2px;
+}
+
+.impact-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.impact-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.impact-icon {
+  width: 52px;
+  height: 52px;
+  background: var(--color-primary-light);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.impact-value {
+  font-family: 'Rubik', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.impact-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.impact-desc {
+  font-size: 12px;
+  color: var(--color-gray);
+}
+
+.achievement-banner {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--color-primary-border);
+}

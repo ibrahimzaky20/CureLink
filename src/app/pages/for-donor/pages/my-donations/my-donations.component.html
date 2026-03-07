@@ -1,0 +1,74 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">My Donations</h1>
+    <p class="page-subtitle">Here's what's happening with your donations today.</p>
+  </div>
+  <app-button label="Donate Medicine" [showPlusIcon]="true" link="../urgent-needs" />
+</div>
+
+<!-- Donations Table Card -->
+<div class="card">
+  <h2 class="card-title">Recent Donations</h2>
+  <table class="donations-table">
+    <thead>
+      <tr>
+        <th>Medicine</th>
+        <th>Qty</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Progress</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (d of donations; track d.medicine + d.date + d.status) {
+        <tr>
+          <td class="med-name">{{ d.medicine }}</td>
+          <td class="qty-col">{{ d.qty }}</td>
+          <td class="date-col">{{ d.date }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="d.status.toLowerCase()">{{ d.status }}</span>
+          </td>
+          <td>
+            <div class="progress-track">
+              <!-- Step 1: always active (clock icon) -->
+              <div class="step active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+
+              <div class="track-line" [ngClass]="{ active: getProgressStep(d.status) >= 2 }"></div>
+
+              <!-- Step 2: checkmark icon if active, number if not -->
+              <div class="step" [ngClass]="{ active: getProgressStep(d.status) >= 2 }">
+                <ng-container *ngIf="getProgressStep(d.status) >= 2; else step2Num">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                </ng-container>
+                <ng-template #step2Num><span class="step-num">2</span></ng-template>
+              </div>
+
+              <div class="track-line" [ngClass]="{ active: getProgressStep(d.status) >= 3 }"></div>
+
+              <!-- Step 3: delivery icon if active, number if not -->
+              <div class="step" [ngClass]="{ active: getProgressStep(d.status) >= 3 }">
+                <ng-container *ngIf="getProgressStep(d.status) >= 3; else step3Num">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="3" width="15" height="13" rx="1" /><path d="m16 8 4 4-4 4" />
+                    <path d="M20 12H7" />
+                  </svg>
+                </ng-container>
+                <ng-template #step3Num><span class="step-num">3</span></ng-template>
+              </div>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
