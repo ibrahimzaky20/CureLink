@@ -2,15 +2,15 @@
 
 /* ─── Design Tokens ────────────────────────────────────── */
 :root {
-  --color-primary:        #14B8A6;
-  --color-primary-dark:   #0D9488;
+  --color-primary:        #238378;
+  --color-primary-dark:   #238378;
   --color-primary-light:  #E7F9F7;
-  --color-primary-border: #C1E6E3;
-  --color-gray:           #65758B;
+  --color-primary-border: #B2DDD9;
+  --color-gray:           #64748B;
   --color-dark:           #0F172A;
   --color-footer-bg:      #1d2530;
   --color-text:           #1E293B;
-  --gradient-primary:     linear-gradient(135deg, #2DD4BF 0%, #3B82F6 100%);
+  --gradient-primary:     linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
   --shadow-card:          0 0 12px 0 rgba(0, 0, 0, 0.10);
 }
 

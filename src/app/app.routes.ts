@@ -18,6 +18,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/register/register.component').then(m => m.RegisterComponent)
   },
   {
+    path: 'auth/verify-email',
+    loadComponent: () => import('./pages/auth/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
+  },
+  {
     path: 'for-donor',
     loadComponent: () => import('./pages/for-donor/for-donor.component').then(m => m.ForDonorComponent),
     children: [
@@ -31,6 +35,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/for-donor/pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
       {
+        path: 'new-donation',
+        loadComponent: () => import('./pages/for-donor/pages/new-donation/new-donation.component').then(m => m.NewDonationComponent)
+      },
+      {
         path: 'my-donations',
         loadComponent: () => import('./pages/for-donor/pages/my-donations/my-donations.component').then(m => m.MyDonationsComponent)
       },
@@ -41,6 +49,29 @@ export const routes: Routes = [
       {
         path: 'notifications',
         loadComponent: () => import('./pages/for-donor/pages/notifications/notifications.component').then(m => m.NotificationsComponent)
+      }
+    ]
+  },
+  {
+    path: 'for-institution',
+    loadComponent: () => import('./pages/for-institution/for-institution.component').then(m => m.ForInstitutionComponent),
+    children: [
+      {
+        path: '',
+        redirectTo: 'browse',
+        pathMatch: 'full'
+      },
+      {
+        path: 'browse',
+        loadComponent: () => import('./pages/for-institution/pages/browse/browse.component').then(m => m.BrowseComponent)
+      },
+      {
+        path: 'my-requests',
+        loadComponent: () => import('./pages/for-institution/pages/my-requests/my-requests.component').then(m => m.MyRequestsComponent)
+      },
+      {
+        path: 'institution-profile',
+        loadComponent: () => import('./pages/for-institution/pages/institution-profile/institution-profile.component').then(m => m.InstitutionProfileComponent)
       }
     ]
   },

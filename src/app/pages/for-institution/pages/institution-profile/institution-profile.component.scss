@@ -1,0 +1,287 @@
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── Page Header ── */
+.page-header {
+  h1 {
+    font-family: 'Rubik', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    background: linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #64748B;
+    margin: 0;
+  }
+}
+
+/* ── Two-column layout ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── Shared Card ── */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* ── Form Card ── */
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-heading {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F1F5F9;
+
+  h2 {
+    font-family: 'Rubik', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #0F172A;
+    margin: 0;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+
+  label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #334155;
+  }
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  gap: 8px;
+  transition: border-color 0.15s;
+
+  &:focus-within {
+    border-color: #238378;
+    box-shadow: 0 0 0 3px rgba(35,131,120,0.1);
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #0F172A;
+    background: transparent;
+    min-width: 0;
+
+    &::placeholder { color: #64748B; }
+  }
+}
+
+.select-wrap {
+  cursor: pointer;
+
+  .input-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #64748B;
+    flex: 1;
+  }
+}
+
+/* ── Save Button ── */
+.btn-save {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover { opacity: 0.9; }
+  &:active { transform: scale(0.98); }
+}
+
+/* ── Verification Card ── */
+.verify-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  h2 {
+    font-family: 'Rubik', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #0F172A;
+    margin: 0;
+  }
+}
+
+.verify-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Verified Banner ── */
+.verified-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #E7F9F7;
+  border-radius: 8px;
+  padding: 20px 16px;
+
+  svg { flex-shrink: 0; margin-top: 2px; }
+}
+
+.verified-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #238378;
+  margin: 0 0 4px;
+}
+
+.verified-desc {
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #0D9488;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Documents ── */
+.docs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.docs-heading {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F1F5F9;
+
+  span {
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #0F172A;
+  }
+}
+
+.doc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+  border-radius: 8px;
+  padding: 10px 16px;
+}
+
+.doc-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.doc-name {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748B;
+}
+
+/* ── Upload Button ── */
+.btn-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1.5px solid #238378;
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #238378;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  align-self: flex-start;
+
+  &:hover { background: #E7F9F7; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .verify-card {
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 20px 16px;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .profile-page .page-header h1 { font-size: 24px; }
+  .profile-page .page-header p  { font-size: 15px; }
+}

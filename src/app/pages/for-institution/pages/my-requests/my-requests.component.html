@@ -1,0 +1,123 @@
+<div class="my-requests-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-title">
+      <h1>My Requests</h1>
+      <p>Track the status of your requested medications.</p>
+    </div>
+    <button class="request-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+      Request medication
+    </button>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-label">Total Requested</span>
+        <div class="stat-icon teal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="#238378" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>
+            <line x1="6" y1="8" x2="18" y2="8"/><line x1="6" y1="12" x2="14" y2="12"/>
+          </svg>
+        </div>
+      </div>
+      <span class="stat-value">{{ stats().total }}</span>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-label">Approved</span>
+        <div class="stat-icon green">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+      </div>
+      <span class="stat-value">{{ stats().approved }}</span>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-label">Delivered</span>
+        <div class="stat-icon cyan">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="#06B6D4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13" rx="1"/>
+            <path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+      </div>
+      <span class="stat-value">{{ stats().delivered }}</span>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-label">Received</span>
+        <div class="stat-icon gray">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+      </div>
+      <span class="stat-value">{{ stats().received }}</span>
+    </div>
+  </div>
+
+  <!-- Active Requests Table -->
+  <div class="table-card">
+    <div class="table-toolbar">
+      <h2>Active Requests</h2>
+      <div class="filter-tabs">
+        @for (f of filters; track f) {
+          <button class="tab" [class.active]="activeFilter() === f" (click)="setFilter(f)">{{ f }}</button>
+        }
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Medication</th>
+            <th>Quantity</th>
+            <th>Requested On</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (req of filtered(); track req.id) {
+            <tr>
+              <td class="req-id">{{ req.id }}</td>
+              <td class="med-name">{{ req.medication }}</td>
+              <td class="muted">{{ req.quantity }}</td>
+              <td class="muted">{{ req.requestedOn }}</td>
+              <td>
+                <span class="status-badge" [class]="'status-' + req.status.toLowerCase()">
+                  <span class="status-dot"></span>
+                  {{ req.status }}
+                </span>
+              </td>
+            </tr>
+          }
+          @empty {
+            <tr>
+              <td colspan="5" class="empty-row">No requests match the selected filter.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
