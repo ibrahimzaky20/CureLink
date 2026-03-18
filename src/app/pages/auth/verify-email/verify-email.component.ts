@@ -1,5 +1,6 @@
-import { Component, signal, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
+import { AuthServiceService } from '../../../core/services/auth/auth-service.service';
 
 @Component({
   selector: 'app-verify-email',
@@ -7,50 +8,87 @@ import { RouterLink } from '@angular/router';
   templateUrl: './verify-email.component.html',
   styleUrl: './verify-email.component.scss'
 })
-export class VerifyEmailComponent {
-  email = signal('');
-  otp   = signal(['', '', '', '', '', '']);
+export class VerifyEmailComponent implements OnInit {
+  private readonly auth   = inject(AuthServiceService);
+  private readonly router = inject(Router);
+  private readonly route  = inject(ActivatedRoute);
 
-  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
+  email        = signal('');
+  otpValue     = signal('');
+  emailTouched = signal(false);
+  otpTouched   = signal(false);
+  loading      = signal(false);
+  serverError  = signal('');
+  resendMsg    = signal('');
 
-  setEmail(value: string) { this.email.set(value); }
+  emailError = computed(() => {
+    if (!this.emailTouched()) return '';
+    if (!this.email()) return 'Email address is required.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email())) return 'Enter a valid email address.';
+    return '';
+  });
 
-  onOtpInput(index: number, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const val = input.value.replace(/\D/g, '').slice(-1);
-    input.value = val;
-    this.otp.update(arr => {
-      const copy = [...arr];
-      copy[index] = val;
-      return copy;
-    });
-    if (val && index < 5) {
-      this.otpInputs.toArray()[index + 1].nativeElement.focus();
+  otpError = computed(() => {
+    if (!this.otpTouched()) return '';
+    if (!this.otpValue()) return 'Verification code is required.';
+    if (this.otpValue().length < 6) return 'Code must be 6 digits.';
+    return '';
+  });
+
+  ngOnInit() {
+    const emailParam = this.route.snapshot.queryParamMap.get('email');
+    if (emailParam) {
+      this.email.set(emailParam);
+      this.emailTouched.set(true);
     }
   }
 
-  onOtpKeydown(index: number, event: KeyboardEvent) {
-    if (event.key === 'Backspace') {
-      const inputs = this.otpInputs.toArray();
-      if (!inputs[index].nativeElement.value && index > 0) {
-        inputs[index - 1].nativeElement.focus();
+  setEmail(value: string) {
+    this.email.set(value);
+    this.emailTouched.set(true);
+  }
+
+  setOtp(input: HTMLInputElement) {
+    const clean = input.value.replace(/\D/g, '').slice(0, 6);
+    input.value = clean;
+    this.otpValue.set(clean);
+    this.otpTouched.set(true);
+  }
+
+  submit() {
+    this.emailTouched.set(true);
+    this.otpTouched.set(true);
+    if (this.emailError() || this.otpError()) return;
+
+    this.loading.set(true);
+    this.serverError.set('');
+
+    this.auth.verifyEmail(this.email(), this.otpValue()).subscribe({
+      next: () => {
+        this.loading.set(false);
+        const pending = this.auth.getPendingReg();
+        const role = pending?.role ?? this.auth.currentUser()?.role;
+        this.auth.clearPendingReg();
+
+        if (role === 'institution') {
+          this.router.navigate(['/auth/register-institution']);
+        } else {
+          this.router.navigate(['/for-donor']);
+        }
+      },
+      error: err => {
+        this.loading.set(false);
+        this.serverError.set(err?.error?.message ?? 'Verification failed. Please check the code and try again.');
       }
-    }
-  }
-
-  onOtpPaste(event: ClipboardEvent) {
-    event.preventDefault();
-    const pasted = (event.clipboardData?.getData('text') ?? '').replace(/\D/g, '').slice(0, 6);
-    const inputs = this.otpInputs.toArray();
-    this.otp.update(() => {
-      const arr = ['', '', '', '', '', ''];
-      for (let i = 0; i < pasted.length; i++) arr[i] = pasted[i];
-      return arr;
     });
-    pasted.split('').forEach((ch, i) => { if (inputs[i]) inputs[i].nativeElement.value = ch; });
-    const focusIdx = Math.min(pasted.length, 5);
-    inputs[focusIdx]?.nativeElement.focus();
   }
 
-  submit() { /* hook up to API */ }
+  resend() {
+    if (!this.email()) return;
+    this.resendMsg.set('');
+    this.auth.resendVerification(this.email()).subscribe({
+      next: () => this.resendMsg.set('A new code has been sent to your email.'),
+      error: err => this.serverError.set(err?.error?.message ?? 'Failed to resend code.')
+    });
+  }
 }

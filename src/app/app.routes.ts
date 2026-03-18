@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { donorGuard, institutionGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -18,11 +19,16 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/register/register.component').then(m => m.RegisterComponent)
   },
   {
+    path: 'auth/register-institution',
+    loadComponent: () => import('./pages/auth/register-institution/register-institution.component').then(m => m.RegisterInstitutionComponent)
+  },
+  {
     path: 'auth/verify-email',
     loadComponent: () => import('./pages/auth/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
   },
   {
     path: 'for-donor',
+    canActivate: [donorGuard],
     loadComponent: () => import('./pages/for-donor/for-donor.component').then(m => m.ForDonorComponent),
     children: [
       {
@@ -54,6 +60,7 @@ export const routes: Routes = [
   },
   {
     path: 'for-institution',
+    canActivate: [institutionGuard],
     loadComponent: () => import('./pages/for-institution/for-institution.component').then(m => m.ForInstitutionComponent),
     children: [
       {

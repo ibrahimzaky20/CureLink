@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "https://curelink-api.io",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "headers": {
+      "Origin": "https://curelink-api.io"
+    }
+  }
+}

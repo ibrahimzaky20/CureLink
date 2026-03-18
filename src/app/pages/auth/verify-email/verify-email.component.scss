@@ -147,34 +147,33 @@ form {
   &:focus { border-color: var(--color-primary); }
 }
 
-/* ── OTP Row ── */
-.otp-row {
-  display: flex;
-  gap: 12px;
+.input-error .field-input {
+  border-color: #EF4444;
+
+  &:focus { border-color: #EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
 }
 
-.otp-box {
-  flex: 1;
-  height: 60px;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 10px;
-  background: #fff;
-  text-align: center;
-  font-size: 22px;
-  font-weight: 600;
-  font-family: 'Rubik', sans-serif;
-  color: #1E293B;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  caret-color: transparent;
+.error-msg {
+  font-size: 12px;
+  color: #EF4444;
+  margin: 2px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
-  &:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(35,131,120,0.12);
-  }
-
-  &:not(:placeholder-shown) {
-    border-color: var(--color-primary);
+  &::before {
+    content: '!';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #EF4444;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
   }
 }
 
@@ -188,8 +187,26 @@ form {
   color: var(--color-primary-dark);
   font-weight: 600;
   text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
 
   &:hover { text-decoration: underline; }
+}
+
+.resend-success {
+  font-size: 12px;
+  color: #16A34A;
+  margin: 2px 0 0;
+}
+
+.server-error {
+  text-align: center;
+  font-size: 13px;
+  padding: 4px 0;
 }
 
 /* ── Submit ── */
@@ -207,6 +224,7 @@ form {
   transition: opacity 0.2s;
 
   &:hover { opacity: 0.92; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
 /* ── Bottom link ── */

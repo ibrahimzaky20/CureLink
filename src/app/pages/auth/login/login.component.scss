@@ -230,6 +230,23 @@ form {
   }
 }
 
+/* ── Validation ── */
+.input-wrap.input-error .field-input {
+  border-color: #EF4444;
+}
+
+.error-msg {
+  font-size: 11.5px;
+  color: #EF4444;
+  margin: 0;
+}
+
+.server-error {
+  text-align: center;
+  font-size: 13px;
+  padding: 6px 0;
+}
+
 /* ── Submit ── */
 .submit-btn {
   width: 100%;
@@ -245,6 +262,7 @@ form {
   transition: opacity 0.2s;
 
   &:hover { opacity: 0.92; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
 /* ── Responsive ── */

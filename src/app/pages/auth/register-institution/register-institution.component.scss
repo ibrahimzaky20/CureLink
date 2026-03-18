@@ -35,7 +35,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 460px;
+  max-width: 480px;
   width: 100%;
   margin: 0 auto;
   padding: 8px 0;
@@ -59,44 +59,6 @@ form {
   display: flex;
   flex-direction: column;
   gap: 9px;
-}
-
-/* ── Role Toggle ── */
-.role-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 2px;
-}
-
-.role-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  height: 38px;
-  background: transparent;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 8px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: #238378;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-
-  svg { flex-shrink: 0; }
-
-  &.active {
-    background: #B8DEDA;
-    border-color: #B8DEDA;
-    color: #238378;
-  }
-
-  &:not(.active):hover {
-    border-color: #B2DDD9;
-    background: #F0FDFA;
-  }
 }
 
 /* ── Fields ── */
@@ -130,11 +92,12 @@ form {
   display: flex;
   align-items: center;
   pointer-events: none;
+  z-index: 1;
 }
 
 .field-input {
   width: 100%;
-  padding: 10px 44px;
+  padding: 10px 14px 10px 44px;
   border: 1.5px solid #E2E8F0;
   border-radius: 8px;
   font-size: 13px;
@@ -143,6 +106,7 @@ form {
   appearance: none;
   outline: none;
   color: #1E293B;
+  font-family: 'Roboto', sans-serif;
   transition: border-color 0.15s;
 
   &::placeholder { color: #64748B; }
@@ -156,31 +120,63 @@ form {
   }
 }
 
-.eye-btn {
-  position: absolute;
-  right: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  padding: 0;
+/* ── Select ── */
+.select-wrap {
+  select.field-input {
+    padding-right: 36px;
+    cursor: pointer;
+    color: #64748B;
+
+    &:valid { color: #1E293B; }
+  }
 }
 
-/* ── File Upload ── */
+.select-arrow {
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Textarea ── */
+.textarea-wrap {
+  position: relative;
+}
+
+.field-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 8px;
+  font-size: 13px;
+  background: #fff;
+  outline: none;
+  color: #1E293B;
+  font-family: 'Roboto', sans-serif;
+  resize: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+
+  &::placeholder { color: #64748B; }
+  &:focus { border-color: var(--color-primary); }
+}
+
+/* ── File Drop ── */
 .file-drop {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 12px 16px;
+  gap: 5px;
+  padding: 10px 12px;
   background: #fff;
   border: 1.5px dashed #CBD5E1;
   border-radius: 8px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
   text-align: center;
+  min-height: 62px;
 
   &:hover { border-color: var(--color-primary); background: #F0FDFA; }
 
@@ -188,25 +184,27 @@ form {
     border-style: solid;
     border-color: var(--color-primary);
     flex-direction: row;
-    padding: 10px 16px;
+    gap: 8px;
+    padding: 10px 14px;
   }
 }
 
 .file-hint {
-  font-size: 12px;
+  font-size: 11px;
   color: #94A3B8;
+  line-height: 1.4;
 
   span { font-weight: 600; color: var(--color-primary-dark); }
 }
 
 .file-name {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--color-primary-dark);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 260px;
+  max-width: 120px;
 }
 
 /* ── Or Divider ── */
@@ -270,6 +268,41 @@ form {
 .server-error {
   text-align: center;
   font-size: 13px;
+}
+
+/* ── Pending Card ── */
+.pending-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.pending-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pending-text {
+  font-size: 14px;
+  color: #64748B;
+  line-height: 1.6;
+  max-width: 380px;
+}
+
+.pending-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  margin-top: 8px;
 }
 
 /* ── Submit ── */
@@ -351,6 +384,7 @@ form {
   .auth-split__form {
     height: auto;
     padding: 28px 24px;
+    overflow: visible;
   }
 
   .auth-split__panel {
@@ -359,4 +393,6 @@ form {
     padding: 40px 32px;
     order: -1;
   }
+
+  .field-row { grid-template-columns: 1fr; }
 }
