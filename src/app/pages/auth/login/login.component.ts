@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthServiceService } from '../../../core/services/auth/auth-service.service';
+import { switchMap, of, catchError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -49,17 +50,30 @@ export class LoginComponent implements OnInit {
 
     const { email, password } = this.form.value;
 
-    this.auth.login(email!, password!).subscribe({
-      next: res => {
+    this.auth.login(email!, password!).pipe(
+      switchMap(loginRes => {
+        const user = loginRes?.data?.user;
+        if (!user) return of({ user: null, full: null });
+
+        if (user.role !== 'institution') return of({ user, full: null });
+
+        // For institution: call me() to get institution.isVerified status
+        return this.auth.me().pipe(
+          switchMap(meRes => of({ user, full: meRes?.data?.user ?? null })),
+          catchError(() => of({ user, full: null }))
+        );
+      })
+    ).subscribe({
+      next: ({ user, full }: any) => {
         this.loading.set(false);
-        const user = res?.data?.user;
+
         if (!user) {
           this.serverError.set('Login failed. Please try again.');
           return;
         }
 
+        // Email not verified
         if (!user.isVerified) {
-          // Email not verified — redirect to verify-email
           this.auth.savePendingReg(user.email, user.role);
           this.router.navigate(['/auth/verify-email'], { queryParams: { email: user.email } });
           return;
@@ -67,8 +81,18 @@ export class LoginComponent implements OnInit {
 
         if (user.role === 'donor') {
           this.router.navigate(['/for-donor']);
-        } else if (user.role === 'institution') {
-          this.router.navigate(['/for-institution']);
+          return;
+        }
+
+        if (user.role === 'institution') {
+          // Use full profile if available, otherwise fall back to login response
+          const institutionVerified = full?.institution?.isVerified ?? user.institution?.isVerified;
+
+          if (institutionVerified) {
+            this.router.navigate(['/for-institution']);
+          } else {
+            this.serverError.set('Your institution is pending admin approval. You will be notified once verified.');
+          }
         }
       },
       error: err => {
