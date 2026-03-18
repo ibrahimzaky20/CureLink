@@ -1,16 +1,11 @@
 import { CanActivateFn, Router } from '@angular/router';
-import { inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { inject } from '@angular/core';
 import { AuthServiceService } from '../services/auth/auth-service.service';
 import { map, catchError, of } from 'rxjs';
 
 export const donorGuard: CanActivateFn = () => {
-  const auth       = inject(AuthServiceService);
-  const router     = inject(Router);
-  const platformId = inject(PLATFORM_ID);
-
-  // SSR: skip check, let the client-side guard handle it
-  if (!isPlatformBrowser(platformId)) return true;
+  const auth   = inject(AuthServiceService);
+  const router = inject(Router);
 
   const cached = auth.currentUser();
   if (cached) {
@@ -34,12 +29,8 @@ export const donorGuard: CanActivateFn = () => {
 };
 
 export const institutionGuard: CanActivateFn = () => {
-  const auth       = inject(AuthServiceService);
-  const router     = inject(Router);
-  const platformId = inject(PLATFORM_ID);
-
-  // SSR: skip check, let the client-side guard handle it
-  if (!isPlatformBrowser(platformId)) return true;
+  const auth   = inject(AuthServiceService);
+  const router = inject(Router);
 
   const cached = auth.currentUser();
   if (cached) {
