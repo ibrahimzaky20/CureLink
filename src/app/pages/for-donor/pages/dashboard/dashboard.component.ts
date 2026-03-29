@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AuthServiceService } from '../../../../core/services/auth/auth-service.service';
 
 export interface Donation {
   medicine: string;
@@ -23,6 +24,8 @@ export interface UrgentNeed {
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
+  private readonly auth = inject(AuthServiceService);
+  userName = computed(() => this.auth.currentUser()?.firstName ?? 'Guest');
   donations: Donation[] = [
     { medicine: 'Amoxicillin 500mg', qty: '30 boxes', date: 'Feb 20 2026', status: 'Delivered' },
     { medicine: 'Amoxicillin 500mg', qty: '30 boxes', date: 'Feb 20 2026', status: 'Approved' },

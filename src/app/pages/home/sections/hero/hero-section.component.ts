@@ -1,5 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthServiceService } from '../../../../core/services/auth/auth-service.service';
 
 @Component({
   selector: 'app-hero-section',
@@ -9,6 +10,12 @@ import { RouterLink } from '@angular/router';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HeroSectionComponent {
+  private readonly auth = inject(AuthServiceService);
+
+  donateLink = computed(() =>
+    this.auth.isLoggedIn() ? '/for-donor/new-donation' : '/auth/register'
+  );
+
   readonly stats = [
     { icon: 'material-symbols:security', label: 'Verified & Safe',   sublabel: 'Quality assured' },
     { icon: 'lucide:users',              label: '10K+ Donors',       sublabel: 'Active community' },

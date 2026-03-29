@@ -4,7 +4,7 @@
     <h1 class="page-title">Urgent Needs</h1>
     <p class="page-subtitle">Here's what's happening with your donations today.</p>
   </div>
-  <app-button label="Donate Medicine" [showPlusIcon]="true" />
+  <app-button label="Donate Medicine" [showPlusIcon]="true" link="../new-donation" />
 </div>
 
 <!-- Urgent Needs Card -->
@@ -34,7 +34,7 @@
           <span class="urgent-units">{{ need.units }}</span>
         </div>
         <span class="urgency-badge" [ngClass]="need.urgency.toLowerCase()">{{ need.urgency }}</span>
-        <app-button label="Donate Now" size="sm" />
+        <app-button label="Donate Now" size="sm" link="../new-donation" />
       </div>
     }
   </div>

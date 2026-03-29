@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
 import { AuthServiceService } from '../../core/services/auth/auth-service.service';
 
@@ -9,8 +9,13 @@ import { AuthServiceService } from '../../core/services/auth/auth-service.servic
   styleUrl: './for-donor.component.scss'
 })
 export class ForDonorComponent {
-  private readonly auth   = inject(AuthServiceService);
+  protected readonly auth   = inject(AuthServiceService);
   private readonly router = inject(Router);
+
+  userInitial = computed(() => {
+    const name = this.auth.currentUser()?.firstName;
+    return name ? name.charAt(0).toUpperCase() : '?';
+  });
 
   mobileOpen = signal(false);
   toggleMobile() { this.mobileOpen.update(v => !v); }

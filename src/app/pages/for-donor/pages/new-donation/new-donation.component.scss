@@ -1,16 +1,16 @@
 .new-donation-page {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 20px;
 }
 
 /* ── Page Header ── */
 .page-header {
   h1 {
     font-family: 'Rubik', sans-serif;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 600;
-    margin: 0 0 6px;
+    margin: 0 0 4px;
     background: linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -19,7 +19,7 @@
 
   p {
     font-family: 'Roboto', sans-serif;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 400;
     color: #64748B;
     margin: 0;
@@ -30,10 +30,10 @@
 .card {
   background: #fff;
   border-radius: 16px;
-  padding: 32px;
+  padding: 24px 28px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 24px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
@@ -41,19 +41,19 @@
 .form-section {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .section-heading {
   display: flex;
   align-items: baseline;
   gap: 16px;
-  padding-bottom: 16px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #F1F5F9;
 
   h2 {
     font-family: 'Rubik', sans-serif;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 500;
     color: #0F172A;
     margin: 0;
@@ -61,7 +61,7 @@
 
   .heading-note {
     font-family: 'Roboto', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     color: #64748B;
   }
 }
@@ -70,13 +70,13 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
 
   label {
     font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     color: #334155;
   }
 }
@@ -84,7 +84,7 @@
 .field-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 24px;
 }
 
 .field-hint {
@@ -97,7 +97,7 @@
   background: #fff;
   border: 1px solid #E2E8F0;
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 10px 14px;
   transition: border-color 0.15s;
 
   &:focus-within {
@@ -116,7 +116,6 @@
 
     &::placeholder { color: #64748B; }
 
-    /* hide number spinners */
     &[type=number]::-webkit-outer-spin-button,
     &[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   }
@@ -128,7 +127,7 @@
   background: #fff;
   border: 1px solid #E2E8F0;
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 10px 14px;
   gap: 8px;
   cursor: pointer;
   transition: border-color 0.15s;
@@ -153,12 +152,62 @@
   svg { flex-shrink: 0; pointer-events: none; }
 }
 
+/* ── Textarea ── */
+.textarea-wrap {
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: border-color 0.15s;
+  flex: 1;
+  display: flex;
+
+  &:focus-within {
+    border-color: #238378;
+    box-shadow: 0 0 0 3px rgba(35,131,120,0.1);
+  }
+
+  textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #0F172A;
+    background: transparent;
+    resize: none;
+
+    &::placeholder { color: #64748B; }
+  }
+}
+
+/* ── Validation ── */
+.input-error {
+  border-color: #EF4444 !important;
+}
+
+.error-msg {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  color: #EF4444;
+}
+
+.server-error {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #DC2626;
+}
+
 /* ── Dropzone ── */
 .dropzone {
   background: #F0FDFA;
   border: 1.5px dashed #B2DDD9;
   border-radius: 8px;
-  padding: 40px 24px;
+  padding: 20px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,27 +224,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   text-align: center;
 }
 
 .dropzone-text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .drop-title {
   font-family: 'Roboto', sans-serif;
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 500;
   color: #0F172A;
   margin: 0;
 }
 
 .drop-sub {
   font-family: 'Roboto', sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   color: #64748B;
   margin: 0;
 }
@@ -204,22 +253,21 @@
 .file-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 4px;
 }
 
 .file-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: #F8FAFC;
-  border-radius: 8px;
-  padding: 10px 14px;
+  border-radius: 6px;
+  padding: 6px 10px;
   font-family: 'Roboto', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   color: #334155;
 
-  span { flex: 1; }
+  span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
 
 .remove-file {
@@ -237,17 +285,17 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .btn-cancel {
   background: transparent;
   border: 1.5px solid #238378;
   border-radius: 8px;
-  padding: 12px 24px;
+  padding: 10px 22px;
   color: #238378;
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s;
@@ -259,27 +307,28 @@
   background: linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
   border: none;
   border-radius: 8px;
-  padding: 12px 28px;
+  padding: 10px 26px;
   color: #fff;
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
 
   &:hover { opacity: 0.9; }
   &:active { transform: scale(0.98); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .card { padding: 20px 16px; }
+  .card { padding: 18px 14px; }
 
   .field-row {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
 
-  .page-header h1 { font-size: 24px; }
-  .page-header p  { font-size: 15px; }
+  .page-header h1 { font-size: 22px; }
+  .page-header p  { font-size: 14px; }
 }

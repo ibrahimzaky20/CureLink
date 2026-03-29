@@ -1,6 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
+import { AuthServiceService } from '../../../../core/services/auth/auth-service.service';
 import type { Participant } from '../../../../core/models/participant.model';
 
 @Component({
@@ -11,6 +12,16 @@ import type { Participant } from '../../../../core/models/participant.model';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ParticipantsSectionComponent {
+  private readonly auth = inject(AuthServiceService);
+
+  get donorRoute(): string {
+    return this.auth.isLoggedIn() ? '/for-donor' : '/auth/register';
+  }
+
+  get institutionRoute(): string {
+    return this.auth.isLoggedIn() ? '/for-institution' : '/auth/register';
+  }
+
   readonly participants: Participant[] = [
     {
       icon: 'solar:heart-linear',
@@ -24,7 +35,7 @@ export class ParticipantsSectionComponent {
         'Impact tracking dashboard'
       ],
       buttonText: 'Start Donating →',
-      buttonRoute: '/auth/register'
+      buttonRoute: '' // resolved dynamically
     },
     {
       icon: 'solar:buildings-2-linear',
@@ -38,7 +49,7 @@ export class ParticipantsSectionComponent {
         'Regular supply notifications'
       ],
       buttonText: 'Request Medicine →',
-      buttonRoute: '/auth/register'
+      buttonRoute: '' // resolved dynamically
     },
     {
       icon: 'material-symbols:security',
@@ -55,4 +66,10 @@ export class ParticipantsSectionComponent {
       buttonRoute: '/platform'
     }
   ];
+
+  getRoute(p: Participant): string {
+    if (p.buttonText.includes('Start Donating')) return this.donorRoute;
+    if (p.buttonText.includes('Request Medicine')) return this.institutionRoute;
+    return p.buttonRoute;
+  }
 }

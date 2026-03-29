@@ -6,8 +6,13 @@
     <p>Provide accurate details about the medication to ensure safe distribution.</p>
   </div>
 
+  <!-- Server Error -->
+  @if (serverError()) {
+    <div class="server-error">{{ serverError() }}</div>
+  }
+
   <!-- Form Card -->
-  <div class="card">
+  <form class="card" [formGroup]="form" (ngSubmit)="submit()">
 
     <!-- Medication Details -->
     <section class="form-section">
@@ -15,93 +20,97 @@
         <h2>Medication Details</h2>
       </div>
 
-      <div class="field">
-        <label>Medicine Name</label>
-        <div class="select-wrap">
-          <select [value]="medicineName()" (change)="medicineName.set($any($event.target).value)">
-            <option value="" disabled selected>Select medication ...</option>
-            @for (m of medicines; track m) {
-              <option [value]="m">{{ m }}</option>
-            }
-          </select>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-
       <div class="field-row">
         <div class="field">
-          <label>Quantity</label>
-          <div class="input-wrap">
-            <input type="number" min="1" [value]="quantity()"
-              (input)="quantity.set($any($event.target).value)"
-              placeholder="Number of pills/units" />
+          <label for="medicineName">Medicine Name</label>
+          <div class="input-wrap" [class.input-error]="fieldError('medicineName')">
+            <input id="medicineName" type="text" formControlName="medicineName"
+                   placeholder="Enter medicine name" />
           </div>
-          <span class="field-hint">Must be unsealed in original packaging</span>
+          @if (fieldError('medicineName')) {
+            <span class="error-msg">{{ fieldError('medicineName') }}</span>
+          }
         </div>
 
         <div class="field">
-          <label>Expiration Date</label>
-          <div class="input-wrap">
-            <input type="date" [value]="expiryDate()" (input)="expiryDate.set($any($event.target).value)" />
+          <label for="expiryDate">Expiration Date</label>
+          <div class="input-wrap" [class.input-error]="fieldError('expiryDate')">
+            <input id="expiryDate" type="date" formControlName="expiryDate" />
           </div>
+          @if (fieldError('expiryDate')) {
+            <span class="error-msg">{{ fieldError('expiryDate') }}</span>
+          }
         </div>
       </div>
     </section>
 
-    <!-- Packaging Photos -->
+    <!-- Packaging Photos + Notes side by side -->
     <section class="form-section">
       <div class="section-heading">
-        <h2>Packaging Photos</h2>
-        <span class="heading-note">Max 3 files, 5MB each</span>
+        <h2>Photos & Notes</h2>
+        <span class="heading-note">Max 3 images, 5MB each</span>
       </div>
 
-      <div class="dropzone" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)"
-           (click)="fileInput.click()">
-        <input #fileInput type="file" multiple accept="image/*" hidden (change)="onFileSelect($event)" />
-        <div class="dropzone-content">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
-            stroke="#238378" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-            <circle cx="12" cy="13" r="4"/>
-            <line x1="12" y1="11" x2="12" y2="11.01"/>
-          </svg>
-          <div class="dropzone-text">
-            <p class="drop-title">Click to upload or drag and drop</p>
-            <p class="drop-sub">Clear photos of label and expiration date required</p>
-          </div>
-        </div>
-      </div>
-
-      @if (files().length) {
-        <div class="file-list">
-          @for (f of files(); track f.name; let i = $index) {
-            <div class="file-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="#238378" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
+      <div class="field-row">
+        <!-- Photos -->
+        <div class="field">
+          <label>Packaging Photos</label>
+          <div class="dropzone" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)"
+               (click)="fileInput.click()">
+            <input #fileInput type="file" multiple accept="image/*" hidden (change)="onFileSelect($event)" />
+            <div class="dropzone-content">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="#238378" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
               </svg>
-              <span>{{ f.name }}</span>
-              <button class="remove-file" (click)="removeFile(i)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
+              <div class="dropzone-text">
+                <p class="drop-title">Click to upload or drag & drop</p>
+                <p class="drop-sub">Photos of label & expiration date</p>
+              </div>
+            </div>
+          </div>
+
+          @if (files().length) {
+            <div class="file-list">
+              @for (f of files(); track f.name; let i = $index) {
+                <div class="file-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="#238378" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <span>{{ f.name }}</span>
+                  <button type="button" class="remove-file" (click)="removeFile(i)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </div>
+              }
             </div>
           }
         </div>
-      }
+
+        <!-- Notes -->
+        <div class="field">
+          <label for="conditionNotes">Additional Notes</label>
+          <div class="textarea-wrap">
+            <textarea id="conditionNotes" formControlName="conditionNotes"
+                      rows="5" placeholder="Any additional information about the medication condition, packaging, etc."></textarea>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Actions -->
     <div class="actions">
-      <button class="btn-cancel" (click)="cancel()">Cancel</button>
-      <button class="btn-submit" (click)="submit()">Submit Donation</button>
+      <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+      <button type="submit" class="btn-submit" [disabled]="submitting()">
+        {{ submitting() ? 'Submitting...' : 'Submit Donation' }}
+      </button>
     </div>
 
-  </div>
+  </form>
 </div>
