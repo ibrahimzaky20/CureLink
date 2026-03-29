@@ -1,8 +1,9 @@
 {
+  "framework": "angular",
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://curelink-api.io/api/:path*"
+      "source": "/api/(.*)",
+      "destination": "https://curelink-api.io/api/$1"
     }
   ]
 }
