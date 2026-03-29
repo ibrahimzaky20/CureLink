@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://curelink-api.io'
+  apiUrl: '' // empty = use Vercel rewrites (vercel.json → https://curelink-api.io)
 };
