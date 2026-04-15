@@ -1,44 +1,98 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-interface Medication {
-  id: number;
-  name: string;
-  form: string;
-  category: string;
-  quantity: number;
-  unit: string;
-  expires: string;
-  verified: boolean;
-}
+import { DatePipe } from '@angular/common';
+import { DonationsService, Donation, Medicine } from '../../../../core/services/donations/donations.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-browse',
-  imports: [FormsModule],
+  imports: [FormsModule, DatePipe],
   templateUrl: './browse.component.html',
   styleUrl: './browse.component.scss'
 })
-export class BrowseComponent {
-  searchQuery = signal('');
+export class BrowseComponent implements OnInit {
+  private readonly donationsApi = inject(DonationsService);
 
-  medications: Medication[] = [
-    { id: 1, name: 'Amoxicillin 500mg', form: 'Capsules', category: 'Antibiotic', quantity: 50, unit: 'Units', expires: 'Oct 2026', verified: true },
-    { id: 2, name: 'Ibuprofen 400mg',   form: 'Tablets',  category: 'Analgesic',  quantity: 120, unit: 'Units', expires: 'Dec 2026', verified: true },
-    { id: 3, name: 'Metformin 850mg',   form: 'Tablets',  category: 'Antidiabetic', quantity: 80, unit: 'Units', expires: 'Mar 2027', verified: true },
-    { id: 4, name: 'Omeprazole 20mg',   form: 'Capsules', category: 'Antacid',    quantity: 60, unit: 'Units', expires: 'Jun 2027', verified: true },
-    { id: 5, name: 'Paracetamol 500mg', form: 'Tablets',  category: 'Analgesic',  quantity: 200, unit: 'Units', expires: 'Sep 2026', verified: true },
-    { id: 6, name: 'Cetirizine 10mg',   form: 'Tablets',  category: 'Antihistamine', quantity: 30, unit: 'Units', expires: 'Jan 2027', verified: true },
-  ];
+  readonly searchQuery = signal('');
+  readonly donations   = signal<Donation[]>([]);
+  readonly loading     = signal(false);
+  readonly errorMsg    = signal('');
 
-  get filtered() {
-    const q = this.searchQuery().toLowerCase();
-    if (!q) return this.medications;
-    return this.medications.filter(m =>
-      m.name.toLowerCase().includes(q) || m.category.toLowerCase().includes(q)
-    );
+  readonly selected   = signal<Donation | null>(null);
+  readonly detailLoading = signal(false);
+  readonly detailError   = signal('');
+
+  readonly filtered = computed(() => {
+    const q = this.searchQuery().toLowerCase().trim();
+    const list = this.donations();
+    if (!q) return list;
+    return list.filter(d => {
+      const med = this.medicineOf(d);
+      return med.name?.toLowerCase().includes(q) || med.category?.toLowerCase().includes(q);
+    });
+  });
+
+  ngOnInit(): void {
+    this.fetchAll();
   }
 
-  requestItem(med: Medication) {
-    alert(`Request sent for: ${med.name}`);
+  fetchAll(): void {
+    this.loading.set(true);
+    this.errorMsg.set('');
+    this.donationsApi.getAll(1, 50).subscribe({
+      next: (res) => {
+        this.donations.set(res?.data?.donations ?? []);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.errorMsg.set(err?.message ?? 'Failed to load donations.');
+        this.loading.set(false);
+      }
+    });
+  }
+
+  openDetails(d: Donation): void {
+    this.selected.set(d);
+    this.detailError.set('');
+    this.detailLoading.set(true);
+    this.donationsApi.getById(d._id).subscribe({
+      next: (res) => {
+        this.selected.set(res?.data ?? d);
+        this.detailLoading.set(false);
+      },
+      error: (err) => {
+        this.detailError.set(err?.message ?? 'Failed to load donation details.');
+        this.detailLoading.set(false);
+      }
+    });
+  }
+
+  closeDetails(): void {
+    this.selected.set(null);
+    this.detailError.set('');
+  }
+
+  medicineOf(d: Donation): Partial<Medicine> {
+    return typeof d.medicine === 'object' && d.medicine ? d.medicine : {};
+  }
+
+  donorLabel(d: Donation): string {
+    const donor = d.donor;
+    if (donor && typeof donor === 'object') {
+      return `${donor.firstName ?? ''} ${donor.lastName ?? ''}`.trim() || 'Anonymous';
+    }
+    return 'Anonymous';
+  }
+
+  imageUrl(path: string | undefined): string {
+    if (!path) return '';
+    if (/^https?:\/\//i.test(path)) return path;
+    const base = environment.apiUrl.replace(/\/$/, '');
+    const rel  = path.replace(/^\//, '');
+    return `${base}/${rel}`;
+  }
+
+  requestItem(d: Donation): void {
+    alert(`Request sent for donation: ${this.medicineOf(d).name ?? d._id}`);
   }
 }

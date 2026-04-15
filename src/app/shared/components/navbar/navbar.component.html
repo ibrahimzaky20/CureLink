@@ -5,7 +5,7 @@
 
     <!-- Desktop Nav -->
     <nav class="navbar__links" aria-label="Main navigation">
-      @for (item of navItems; track item.label) {
+      @for (item of navItems(); track item.label) {
         <a
           [routerLink]="item.route"
           [fragment]="item.fragment"
@@ -16,10 +16,30 @@
       }
     </nav>
 
-    <!-- CTA Buttons -->
+    <!-- CTA / User -->
     <div class="navbar__actions">
-      <a routerLink="/auth/login" class="btn btn-secondary navbar__btn">Sign In</a>
-      <a routerLink="/auth/register" class="btn btn-primary navbar__btn">Get Started</a>
+      @if (!user()) {
+        <a routerLink="/auth/login" class="btn btn-secondary navbar__btn">Sign In</a>
+        <a routerLink="/auth/register" class="btn btn-primary navbar__btn">Get Started</a>
+      } @else {
+        <div class="navbar__user">
+          <button class="navbar__avatar" (click)="toggleMenu()" [attr.aria-label]="'Account menu'">
+            {{ initial() }}
+          </button>
+          @if (menuOpen()) {
+            <div class="navbar__menu">
+              <div class="navbar__menu-header">
+                <div class="navbar__menu-name">{{ user()?.firstName }} {{ user()?.lastName }}</div>
+                <div class="navbar__menu-email">{{ user()?.email }}</div>
+              </div>
+              <button class="navbar__menu-item" (click)="logout()">
+                <iconify-icon icon="lucide:log-out" width="16" height="16"></iconify-icon>
+                Logout
+              </button>
+            </div>
+          }
+        </div>
+      }
     </div>
 
     <!-- Mobile hamburger -->
@@ -31,7 +51,7 @@
   <!-- Mobile Menu -->
   @if (mobileOpen()) {
     <div class="navbar__mobile">
-      @for (item of navItems; track item.label) {
+      @for (item of navItems(); track item.label) {
         <a
           [routerLink]="item.route"
           [fragment]="item.fragment"
@@ -40,8 +60,16 @@
         >{{ item.label }}</a>
       }
       <div class="navbar__mobile-actions">
-        <a routerLink="/auth/login"    class="btn btn-secondary w-full text-center" (click)="toggleMobile()">Sign In</a>
-        <a routerLink="/auth/register" class="btn btn-primary w-full text-center"      (click)="toggleMobile()">Get Started</a>
+        @if (!user()) {
+          <a routerLink="/auth/login"    class="btn btn-secondary w-full text-center" (click)="toggleMobile()">Sign In</a>
+          <a routerLink="/auth/register" class="btn btn-primary w-full text-center"   (click)="toggleMobile()">Get Started</a>
+        } @else {
+          <div class="navbar__mobile-user">
+            <span class="navbar__avatar navbar__avatar--sm">{{ initial() }}</span>
+            <span>{{ user()?.firstName }} {{ user()?.lastName }}</span>
+          </div>
+          <button class="btn btn-secondary w-full text-center" (click)="logout(); toggleMobile()">Logout</button>
+        }
       </div>
     </div>
   }
