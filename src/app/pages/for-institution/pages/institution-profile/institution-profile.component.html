@@ -7,7 +7,7 @@
   </div>
 
   @if (loading()) {
-    <p class="state-msg">Loading profile...</p>
+    <div class="loader-wrap"><span class="loader-brand">CureLink</span></div>
   } @else if (errorMsg() && !profile()) {
     <p class="state-msg error">{{ errorMsg() }}</p>
   } @else {

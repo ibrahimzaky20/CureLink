@@ -106,6 +106,27 @@ a { text-decoration: none; color: inherit; }
   color: var(--color-primary-dark);
 }
 
+/* ─── CureLink Loader ─────────────────────────────────── */
+.loader-wrap {
+  display: flex; align-items: center; justify-content: center; padding: 48px 0;
+}
+
+.loader-brand {
+  font-family: 'Rubik', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: pulse-brand 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-brand {
+  0%, 100% { opacity: 0.3; transform: scale(0.97); }
+  50%      { opacity: 1;   transform: scale(1); }
+}
+
 /* ─── Scrollbar ────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: var(--color-primary-border); border-radius: 3px; }

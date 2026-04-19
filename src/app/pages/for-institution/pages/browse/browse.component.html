@@ -37,7 +37,7 @@
   </div>
 
   @if (loading()) {
-    <p class="state-msg">Loading donations...</p>
+    <div class="loader-wrap"><span class="loader-brand">CureLink</span></div>
   } @else if (errorMsg()) {
     <p class="state-msg error">{{ errorMsg() }}</p>
   } @else {
@@ -92,7 +92,7 @@
         <button class="modal-close" (click)="closeDetails()" aria-label="Close">×</button>
 
         @if (detailLoading()) {
-          <p class="state-msg">Loading details...</p>
+          <div class="loader-wrap"><span class="loader-brand">CureLink</span></div>
         } @else if (detailError()) {
           <p class="state-msg error">{{ detailError() }}</p>
         } @else {

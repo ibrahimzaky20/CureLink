@@ -29,7 +29,6 @@
 <!-- Table -->
 <div class="card">
   @if (loading()) {
-    <p class="empty-msg">Loading donations...</p>
   } @else if (donations().length === 0) {
     <p class="empty-msg">No donations found.</p>
   } @else {

@@ -6,7 +6,7 @@ import { LoaderService } from '../../../core/services/loader/loader.service';
   template: `
     @if (loader.loading()) {
       <div class="loader-overlay">
-        <div class="spinner"></div>
+        <span class="loader-brand">CureLink</span>
       </div>
     }
   `,
@@ -21,18 +21,20 @@ import { LoaderService } from '../../../core/services/loader/loader.service';
       background: rgba(255, 255, 255, 0.5);
     }
 
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 4px solid #E2E8F0;
-      border-top-color: #2BCEB8;
-      border-right-color: #39A0EA;
-      animation: spin 0.8s linear infinite;
+    .loader-brand {
+      font-family: 'Rubik', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      background: linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: pulse-brand 1.4s ease-in-out infinite;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    @keyframes pulse-brand {
+      0%, 100% { opacity: 0.3; transform: scale(0.97); }
+      50%      { opacity: 1;   transform: scale(1); }
     }
   `]
 })

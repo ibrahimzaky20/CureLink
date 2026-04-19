@@ -9,7 +9,6 @@
 <!-- Table -->
 <div class="card">
   @if (loading()) {
-    <p class="empty-msg">Loading pending donations...</p>
   } @else if (donations().length === 0) {
     <div class="empty-state">
       <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
