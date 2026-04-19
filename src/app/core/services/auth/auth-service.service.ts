@@ -9,7 +9,7 @@ export interface AuthUser {
   firstName: string;
   lastName: string;
   email: string;
-  role: 'donor' | 'institution';
+  role: 'donor' | 'institution' | 'superadmin';
   isVerified: boolean;
   institution?: {
     _id: string;
@@ -24,7 +24,7 @@ export interface RegisterPayload {
   email: string;
   password: string;
   phone: string;
-  role: 'donor' | 'institution';
+  role: 'donor' | 'institution' | 'superadmin';
 }
 
 @Injectable({ providedIn: 'root' })

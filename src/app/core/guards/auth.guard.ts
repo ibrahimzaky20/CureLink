@@ -23,3 +23,14 @@ export const institutionGuard: CanActivateFn = () => {
   router.navigate(['/auth/login']);
   return false;
 };
+
+export const superadminGuard: CanActivateFn = () => {
+  const auth   = inject(AuthServiceService);
+  const router = inject(Router);
+
+  const user = auth.currentUser();
+  if (user?.role === 'superadmin') return true;
+
+  router.navigate(['/auth/login']);
+  return false;
+};

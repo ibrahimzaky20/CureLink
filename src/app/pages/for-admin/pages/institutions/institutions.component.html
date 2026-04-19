@@ -1,0 +1,96 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">All Institutions</h1>
+    <p class="page-subtitle">View and manage all registered institutions on the platform.</p>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="card">
+  @if (loading()) {
+    <p class="empty-msg">Loading institutions...</p>
+  } @else if (institutions().length === 0) {
+    <p class="empty-msg">No institutions found.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>License No.</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (inst of institutions(); track inst._id) {
+            <tr>
+              <td class="primary-col">{{ inst.name }}</td>
+              <td>{{ inst.type ?? '-' }}</td>
+              <td>{{ inst.licenseNumber ?? '-' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getVerifiedClass(inst)">
+                  {{ inst.isVerified ? 'Verified' : 'Unverified' }}
+                </span>
+              </td>
+              <td>
+                <button class="action-btn view" title="View Details" (click)="viewDetails(inst)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Detail Modal -->
+@if (showDetail()) {
+  <div class="modal-overlay" (click)="closeDetail()">
+    <div class="modal modal-lg" (click)="$event.stopPropagation()">
+      @if (detailLoading()) {
+        <p class="empty-msg">Loading details...</p>
+      } @else if (selectedInst()) {
+        <h3 class="modal-title">{{ selectedInst().name }}</h3>
+        <span class="status-badge" [ngClass]="getVerifiedClass(selectedInst())" style="margin-bottom: 16px; display: inline-block;">
+          {{ selectedInst().isVerified ? 'Verified' : 'Unverified' }}
+        </span>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Type</span>
+            <span class="detail-value">{{ selectedInst().type ?? '-' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">License Number</span>
+            <span class="detail-value">{{ selectedInst().licenseNumber ?? '-' }}</span>
+          </div>
+          <div class="detail-item full">
+            <span class="detail-label">Description</span>
+            <span class="detail-value">{{ selectedInst().description ?? '-' }}</span>
+          </div>
+          @if (selectedInst().addresses?.length) {
+            <div class="detail-item full">
+              <span class="detail-label">Address</span>
+              @for (addr of selectedInst().addresses; track $index) {
+                <span class="detail-value">{{ addr.governorate ?? '' }}, {{ addr.city ?? '' }}, {{ addr.street ?? '' }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeDetail()">Close</button>
+        </div>
+      }
+    </div>
+  </div>
+}

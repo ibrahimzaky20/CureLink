@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { donorGuard, institutionGuard } from './core/guards/auth.guard';
+import { donorGuard, institutionGuard, superadminGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -79,6 +79,38 @@ export const routes: Routes = [
       {
         path: 'institution-profile',
         loadComponent: () => import('./pages/for-institution/pages/institution-profile/institution-profile.component').then(m => m.InstitutionProfileComponent)
+      }
+    ]
+  },
+  {
+    path: 'admin',
+    canActivate: [superadminGuard],
+    loadComponent: () => import('./pages/for-admin/for-admin.component').then(m => m.ForAdminComponent),
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/for-admin/pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      },
+      {
+        path: 'donations',
+        loadComponent: () => import('./pages/for-admin/pages/donations/donations.component').then(m => m.DonationsComponent)
+      },
+      {
+        path: 'pending-donations',
+        loadComponent: () => import('./pages/for-admin/pages/pending-donations/pending-donations.component').then(m => m.PendingDonationsComponent)
+      },
+      {
+        path: 'institutions',
+        loadComponent: () => import('./pages/for-admin/pages/institutions/institutions.component').then(m => m.InstitutionsComponent)
+      },
+      {
+        path: 'pending-institutions',
+        loadComponent: () => import('./pages/for-admin/pages/pending-institutions/pending-institutions.component').then(m => m.PendingInstitutionsComponent)
       }
     ]
   },

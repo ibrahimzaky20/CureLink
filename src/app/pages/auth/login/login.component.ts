@@ -60,6 +60,11 @@ export class LoginComponent implements OnInit {
           return;
         }
 
+        if (user.role === 'superadmin') {
+          this.router.navigate(['/admin']);
+          return;
+        }
+
         if (user.role === 'donor') {
           if (!user.isVerified) {
             this.auth.savePendingReg(user.email, user.role);
