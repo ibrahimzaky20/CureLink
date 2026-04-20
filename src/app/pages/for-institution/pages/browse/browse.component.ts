@@ -15,11 +15,9 @@ export class BrowseComponent implements OnInit {
 
   readonly searchQuery = signal('');
   readonly donations   = signal<Donation[]>([]);
-  readonly loading     = signal(false);
   readonly errorMsg    = signal('');
 
   readonly selected   = signal<Donation | null>(null);
-  readonly detailLoading = signal(false);
   readonly detailError   = signal('');
 
   readonly filtered = computed(() => {
@@ -37,16 +35,13 @@ export class BrowseComponent implements OnInit {
   }
 
   fetchAll(): void {
-    this.loading.set(true);
     this.errorMsg.set('');
     this.donationsApi.getAll(1, 50).subscribe({
       next: (res) => {
         this.donations.set(res?.data?.donations ?? []);
-        this.loading.set(false);
       },
       error: (err) => {
         this.errorMsg.set(err?.message ?? 'Failed to load donations.');
-        this.loading.set(false);
       }
     });
   }
@@ -54,15 +49,12 @@ export class BrowseComponent implements OnInit {
   openDetails(d: Donation): void {
     this.selected.set(d);
     this.detailError.set('');
-    this.detailLoading.set(true);
     this.donationsApi.getById(d._id).subscribe({
       next: (res) => {
         this.selected.set(res?.data ?? d);
-        this.detailLoading.set(false);
       },
       error: (err) => {
         this.detailError.set(err?.message ?? 'Failed to load donation details.');
-        this.detailLoading.set(false);
       }
     });
   }

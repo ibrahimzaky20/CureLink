@@ -36,9 +36,7 @@
     </div>
   </div>
 
-  @if (loading()) {
-    <div class="loader-wrap"><span class="loader-brand">CureLink</span></div>
-  } @else if (errorMsg()) {
+  @if (errorMsg()) {
     <p class="state-msg error">{{ errorMsg() }}</p>
   } @else {
     <div class="cards-grid">
@@ -91,9 +89,7 @@
       <div class="modal" (click)="$event.stopPropagation()">
         <button class="modal-close" (click)="closeDetails()" aria-label="Close">×</button>
 
-        @if (detailLoading()) {
-          <div class="loader-wrap"><span class="loader-brand">CureLink</span></div>
-        } @else if (detailError()) {
+        @if (detailError()) {
           <p class="state-msg error">{{ detailError() }}</p>
         } @else {
           <!-- Hero -->

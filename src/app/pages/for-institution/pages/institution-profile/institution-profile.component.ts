@@ -13,7 +13,6 @@ export class InstitutionProfileComponent implements OnInit {
   private readonly api  = inject(InstitutionService);
   private readonly auth = inject(AuthServiceService);
 
-  readonly loading  = signal(false);
   readonly saving   = signal(false);
   readonly errorMsg = signal('');
   readonly successMsg = signal('');
@@ -38,7 +37,6 @@ export class InstitutionProfileComponent implements OnInit {
   }
 
   fetchProfile(): void {
-    this.loading.set(true);
     this.errorMsg.set('');
     this.api.getProfile().subscribe({
       next: (res: any) => {
@@ -49,11 +47,9 @@ export class InstitutionProfileComponent implements OnInit {
         this.address.set(p?.address || this.formatAddress(p));
         this.contactNumber.set(p?.contactNumber || '');
         this.logoPreview.set(p?.logo || '');
-        this.loading.set(false);
       },
       error: (err) => {
         this.errorMsg.set(err?.message ?? 'Failed to load profile.');
-        this.loading.set(false);
       }
     });
   }

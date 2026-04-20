@@ -73,6 +73,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/for-institution/pages/browse/browse.component').then(m => m.BrowseComponent)
       },
       {
+        path: 'new-request',
+        loadComponent: () => import('./pages/for-institution/pages/new-request/new-request.component').then(m => m.NewRequestComponent)
+      },
+      {
         path: 'my-requests',
         loadComponent: () => import('./pages/for-institution/pages/my-requests/my-requests.component').then(m => m.MyRequestsComponent)
       },

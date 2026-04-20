@@ -1,4 +1,6 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 type Status = 'Approved' | 'Delivered' | 'Received' | 'Pending';
 type Filter = 'All' | Status;
@@ -13,11 +15,12 @@ interface MedRequest {
 
 @Component({
   selector: 'app-my-requests',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './my-requests.component.html',
   styleUrl: './my-requests.component.scss'
 })
 export class MyRequestsComponent {
+  private readonly router = inject(Router);
   activeFilter = signal<Filter>('All');
   filters: Filter[] = ['All', 'Pending', 'Approved', 'Delivered', 'Received'];
 

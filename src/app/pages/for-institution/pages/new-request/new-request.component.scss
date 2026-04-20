@@ -1,16 +1,18 @@
-.new-donation-page {
+.new-request-page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 /* ── Page Header ── */
 .page-header {
+  margin-bottom: 32px;
+
   h1 {
     font-family: 'Rubik', sans-serif;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 600;
-    margin: 0 0 4px;
+    margin: 0 0 8px;
+    line-height: 37px;
     background: linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -19,50 +21,63 @@
 
   p {
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
     color: #64748B;
     margin: 0;
+    line-height: 28px;
   }
 }
 
 /* ── Card ── */
 .card {
+  display: flex;
+  width: 100%;
+  padding: 32px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
   background: #fff;
   border-radius: 16px;
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
 }
 
 /* ── Form Section ── */
 .form-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  width: 100%;
+}
+
+.photos-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .section-heading {
   display: flex;
   align-items: baseline;
-  gap: 16px;
-  padding-bottom: 10px;
+  justify-content: space-between;
+  padding-bottom: 8px;
   border-bottom: 1px solid #F1F5F9;
+  margin-bottom: 16px;
+  width: 100%;
 
   h2 {
     font-family: 'Rubik', sans-serif;
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 22px;
+    font-weight: 700;
     color: #0F172A;
     margin: 0;
   }
 
   .heading-note {
     font-family: 'Roboto', sans-serif;
-    font-size: 13px;
-    color: #64748B;
+    font-size: 14px;
+    color: #238378;
+    font-weight: 400;
   }
 }
 
@@ -76,9 +91,13 @@
   label {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     color: #334155;
   }
+}
+
+.field + .field-row {
+  margin-top: 16px;
 }
 
 .field-row {
@@ -94,30 +113,39 @@
 }
 
 .input-wrap {
+  display: flex;
+  align-items: center;
   background: #fff;
   border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  padding: 10px 14px;
-  transition: border-color 0.15s;
+  border-radius: 12px;
+  padding: 0 16px;
+  height: 56px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+
+  &:hover { border-color: #CBD5E1; }
 
   &:focus-within {
     border-color: #238378;
-    box-shadow: 0 0 0 3px rgba(35,131,120,0.1);
+    box-shadow: 0 0 0 3px rgba(35, 131, 120, 0.08);
   }
 
   input {
-    width: 100%;
+    flex: 1;
     border: none;
     outline: none;
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     color: #0F172A;
     background: transparent;
+    min-width: 0;
+    height: 100%;
 
-    &::placeholder { color: #64748B; }
+    &::placeholder { color: #94A3B8; }
 
     &[type=number]::-webkit-outer-spin-button,
     &[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    &[type=number] { -moz-appearance: textfield; }
   }
 }
 
@@ -126,15 +154,19 @@
   align-items: center;
   background: #fff;
   border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  padding: 10px 14px;
+  border-radius: 12px;
+  padding: 0 16px;
+  height: 56px;
+  box-sizing: border-box;
   gap: 8px;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: border-color 0.2s;
+
+  &:hover { border-color: #CBD5E1; }
 
   &:focus-within {
     border-color: #238378;
-    box-shadow: 0 0 0 3px rgba(35,131,120,0.1);
+    box-shadow: 0 0 0 3px rgba(35, 131, 120, 0.08);
   }
 
   select {
@@ -147,44 +179,14 @@
     color: #64748B;
     background: transparent;
     cursor: pointer;
+    height: 100%;
   }
 
   svg { flex-shrink: 0; pointer-events: none; }
 }
 
-/* ── Textarea ── */
-.textarea-wrap {
-  background: #fff;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  padding: 10px 14px;
-  transition: border-color 0.15s;
-  flex: 1;
-  display: flex;
-
-  &:focus-within {
-    border-color: #238378;
-    box-shadow: 0 0 0 3px rgba(35,131,120,0.1);
-  }
-
-  textarea {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-    color: #0F172A;
-    background: transparent;
-    resize: none;
-
-    &::placeholder { color: #64748B; }
-  }
-}
-
 /* ── Validation ── */
-.input-error {
-  border-color: #EF4444 !important;
-}
+.input-error { border-color: #EF4444 !important; }
 
 .error-msg {
   font-family: 'Roboto', sans-serif;
@@ -200,19 +202,22 @@
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   color: #DC2626;
+  margin-bottom: 8px;
 }
 
 /* ── Dropzone ── */
 .dropzone {
   background: #F0FDFA;
   border: 1.5px dashed #B2DDD9;
-  border-radius: 8px;
-  padding: 20px 16px;
+  border-radius: 12px;
+  width: 100%;
+  height: 237px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
 
   &:hover {
     border-color: #238378;
@@ -224,19 +229,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
   text-align: center;
 }
 
 .dropzone-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .drop-title {
   font-family: 'Roboto', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: #0F172A;
   margin: 0;
@@ -244,7 +249,7 @@
 
 .drop-sub {
   font-family: 'Roboto', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   color: #64748B;
   margin: 0;
 }
@@ -254,6 +259,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  margin-top: 8px;
 }
 
 .file-item {
@@ -285,17 +291,21 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: flex-end;
+  gap: 24px;
+  width: 100%;
 }
 
 .btn-cancel {
   background: transparent;
   border: 1.5px solid #238378;
-  border-radius: 8px;
-  padding: 10px 22px;
+  border-radius: 12px;
+  padding: 0 40px;
+  height: 56px;
+  box-sizing: border-box;
   color: #238378;
   font-family: 'Roboto', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s;
@@ -306,11 +316,13 @@
 .btn-submit {
   background: linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
   border: none;
-  border-radius: 8px;
-  padding: 10px 26px;
+  border-radius: 12px;
+  padding: 0 40px;
+  height: 56px;
+  box-sizing: border-box;
   color: #fff;
   font-family: 'Roboto', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s, box-shadow 0.2s;
@@ -321,13 +333,25 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .card { padding: 18px 14px; }
+  .card { padding: 20px 16px; }
 
   .field-row {
     grid-template-columns: 1fr;
     gap: 16px;
   }
 
-  .page-header h1 { font-size: 22px; }
-  .page-header p  { font-size: 14px; }
+  .page-header h1 { font-size: 24px; }
+  .page-header p  { font-size: 15px; }
+
+  .dropzone { height: 180px; }
+
+  .actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .btn-cancel, .btn-submit {
+    width: 100%;
+    text-align: center;
+  }
 }

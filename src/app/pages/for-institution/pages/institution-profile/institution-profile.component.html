@@ -6,9 +6,7 @@
     <p>Manage your organization details and verification status</p>
   </div>
 
-  @if (loading()) {
-    <div class="loader-wrap"><span class="loader-brand">CureLink</span></div>
-  } @else if (errorMsg() && !profile()) {
+  @if (errorMsg() && !profile()) {
     <p class="state-msg error">{{ errorMsg() }}</p>
   } @else {
     <div class="two-col">

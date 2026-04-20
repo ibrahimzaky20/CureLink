@@ -53,7 +53,7 @@
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: background 0.15s;
 
-  &.approve { background: var(--color-primary-light); color: var(--color-primary-dark); &:hover { background: #C5F0EB; } }
+  &.approve { background: var(--color-primary-light); color: var(--color-primary-dark); &:hover { background: #D1F5EF; } }
   &.reject { background: #FEF2F2; color: #EF4444; &:hover { background: #FEE2E2; } }
 }
 

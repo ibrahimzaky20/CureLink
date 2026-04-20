@@ -184,7 +184,7 @@ form {
   transition: border-color 0.15s, background 0.15s;
   text-align: center;
 
-  &:hover { border-color: var(--color-primary); background: #F0FDFA; }
+  &:hover { border-color: var(--color-primary); background: #E7F9F7; }
 
   &.has-file {
     border-style: solid;
@@ -288,7 +288,7 @@ form {
   cursor: pointer;
   transition: opacity 0.2s;
 
-  &:hover { opacity: 0.92; }
+  &:hover { opacity: 0.88; box-shadow: 0 4px 16px rgba(43, 206, 184, 0.3); }
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
@@ -339,7 +339,7 @@ form {
   text-decoration: none;
   transition: opacity 0.2s;
 
-  &:hover { opacity: 0.9; }
+  &:hover { opacity: 0.88; box-shadow: 0 4px 16px rgba(43, 206, 184, 0.3); }
 }
 
 /* ── Responsive ── */
