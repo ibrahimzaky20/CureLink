@@ -1,8 +1,11 @@
 import { CanActivateFn, Router } from '@angular/router';
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { AuthServiceService } from '../services/auth/auth-service.service';
 
 export const donorGuard: CanActivateFn = () => {
+  if (!isPlatformBrowser(inject(PLATFORM_ID))) return true;
+
   const auth   = inject(AuthServiceService);
   const router = inject(Router);
 
@@ -14,6 +17,8 @@ export const donorGuard: CanActivateFn = () => {
 };
 
 export const institutionGuard: CanActivateFn = () => {
+  if (!isPlatformBrowser(inject(PLATFORM_ID))) return true;
+
   const auth   = inject(AuthServiceService);
   const router = inject(Router);
 
@@ -25,6 +30,8 @@ export const institutionGuard: CanActivateFn = () => {
 };
 
 export const superadminGuard: CanActivateFn = () => {
+  if (!isPlatformBrowser(inject(PLATFORM_ID))) return true;
+
   const auth   = inject(AuthServiceService);
   const router = inject(Router);
 

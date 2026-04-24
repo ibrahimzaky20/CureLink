@@ -1,47 +1,122 @@
-import { Component, inject, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DatePipe, TitleCasePipe } from '@angular/common';
+import { MedicationRequestService } from '../../../../core/services/medication-request/medication-request.service';
 
-type Status = 'Approved' | 'Delivered' | 'Received' | 'Pending';
-type Filter = 'All' | Status;
+type Filter = 'all' | 'open' | 'partially_fulfilled' | 'fulfilled' | 'cancelled' | 'expired';
 
 interface MedRequest {
-  id: string;
-  medication: string;
-  quantity: string;
-  requestedOn: string;
-  status: Status;
+  _id: string;
+  medicineName: string;
+  strength?: string;
+  dosageForm?: string;
+  requiredQuantity: { amount: number; unit: string };
+  priority: string;
+  status: string;
+  expiresAt: string;
+  notes?: string;
+  createdAt: string;
 }
 
 @Component({
   selector: 'app-my-requests',
-  imports: [RouterLink],
+  imports: [RouterLink, DatePipe, TitleCasePipe],
   templateUrl: './my-requests.component.html',
   styleUrl: './my-requests.component.scss'
 })
-export class MyRequestsComponent {
-  private readonly router = inject(Router);
-  activeFilter = signal<Filter>('All');
-  filters: Filter[] = ['All', 'Pending', 'Approved', 'Delivered', 'Received'];
+export class MyRequestsComponent implements OnInit {
+  private readonly api = inject(MedicationRequestService);
 
-  requests: MedRequest[] = [
-    { id: 'REQ-2034', medication: 'Metformin 850mg',   quantity: '100 Tablets', requestedOn: 'Today, 10:22 AM', status: 'Approved'  },
-    { id: 'REQ-2021', medication: 'Amoxicillin 500mg', quantity: '50 Capsules', requestedOn: 'Oct 14, 2023',    status: 'Received'  },
-    { id: 'REQ-1850', medication: 'Lisinopril 10mg',   quantity: '30 Tablets',  requestedOn: 'Oct 10, 2023',    status: 'Delivered' },
-    { id: 'REQ-1994', medication: 'Insulin Glargine',  quantity: '5 Vials',     requestedOn: 'Sep 28, 2023',    status: 'Pending'   },
-  ];
+  activeFilter = signal<Filter>('all');
+  filters: Filter[] = ['all', 'open', 'partially_fulfilled', 'fulfilled', 'cancelled', 'expired'];
 
-  stats = computed(() => ({
-    total:     this.requests.length + 38,
-    approved:  this.requests.filter(r => r.status === 'Approved').length  + 17,
-    delivered: this.requests.filter(r => r.status === 'Delivered').length + 6,
-    received:  this.requests.filter(r => r.status === 'Received').length  + 16,
-  }));
+  requests  = signal<MedRequest[]>([]);
+  loading   = signal(true);
+  deleting  = signal<string | null>(null);
 
-  filtered = computed(() => {
-    const f = this.activeFilter();
-    return f === 'All' ? this.requests : this.requests.filter(r => r.status === f);
-  });
+  stats = signal({ total: 0, open: 0, fulfilled: 0, cancelled: 0 });
 
-  setFilter(f: Filter) { this.activeFilter.set(f); }
+  page       = signal(1);
+  totalPages = signal(1);
+
+  ngOnInit() {
+    this.loadStats();
+    this.loadRequests();
+  }
+
+  loadStats() {
+    this.api.getStatistics().subscribe({
+      next: (res) => {
+        const s = res?.data?.summary ?? res?.data ?? {};
+        this.stats.set({
+          total:     s.total ?? 0,
+          open:      s.open ?? 0,
+          fulfilled: s.fulfilled ?? 0,
+          cancelled: s.cancelled ?? 0,
+        });
+      },
+      error: () => {}
+    });
+  }
+
+  loadRequests() {
+    this.loading.set(true);
+    const filter = this.activeFilter();
+    const params: any = { page: this.page(), limit: 10 };
+    if (filter !== 'all') params.status = filter;
+
+    this.api.getRequests(params).subscribe({
+      next: (res) => {
+        this.requests.set(res?.data?.requests ?? res?.data ?? []);
+        const pagination = res?.data?.pagination;
+        if (pagination) {
+          this.totalPages.set(pagination.pages ?? 1);
+        }
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      }
+    });
+  }
+
+  setFilter(f: Filter) {
+    this.activeFilter.set(f);
+    this.page.set(1);
+    this.loadRequests();
+  }
+
+  prevPage() {
+    if (this.page() > 1) {
+      this.page.update(p => p - 1);
+      this.loadRequests();
+    }
+  }
+
+  nextPage() {
+    if (this.page() < this.totalPages()) {
+      this.page.update(p => p + 1);
+      this.loadRequests();
+    }
+  }
+
+  deleteRequest(id: string) {
+    this.deleting.set(id);
+    this.api.deleteRequest(id).subscribe({
+      next: () => {
+        this.deleting.set(null);
+        this.requests.update(list => list.filter(r => r._id !== id));
+        this.loadStats();
+      },
+      error: () => {
+        this.deleting.set(null);
+      }
+    });
+  }
+
+  filterLabel(f: Filter): string {
+    if (f === 'all') return 'All';
+    if (f === 'partially_fulfilled') return 'Partial';
+    return f.charAt(0).toUpperCase() + f.slice(1);
+  }
 }

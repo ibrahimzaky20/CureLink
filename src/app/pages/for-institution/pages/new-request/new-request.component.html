@@ -3,7 +3,7 @@
   <!-- Page Header -->
   <div class="page-header">
     <h1>Request New Medication</h1>
-    <p>Provide accurate details about the medication to ensure safe distribution.</p>
+    <p>Provide accurate details about the medication your institution needs.</p>
   </div>
 
   <!-- Server Error -->
@@ -25,91 +25,119 @@
         <label for="medicineName">Medicine Name</label>
         <div class="input-wrap" [class.input-error]="fieldError('medicineName')">
           <input id="medicineName" type="text" formControlName="medicineName"
-                 placeholder="Select medication ..." />
+                 placeholder="e.g. Amoxicillin" />
         </div>
         @if (fieldError('medicineName')) {
           <span class="error-msg">{{ fieldError('medicineName') }}</span>
         }
       </div>
 
-      <!-- Quantity + Category row -->
+      <!-- Strength + Dosage Form row -->
       <div class="field-row">
         <div class="field">
-          <label for="quantity">Quantity</label>
-          <div class="input-wrap" [class.input-error]="fieldError('quantity')">
-            <input id="quantity" type="number" formControlName="quantity"
-                   placeholder="Number of pills/units" />
+          <label for="strength">Strength</label>
+          <div class="input-wrap">
+            <input id="strength" type="text" formControlName="strength"
+                   placeholder="e.g. 500mg" />
           </div>
-          <span class="field-hint">Must be unsealed in original packaging</span>
-          @if (fieldError('quantity')) {
-            <span class="error-msg">{{ fieldError('quantity') }}</span>
-          }
         </div>
 
         <div class="field">
-          <label for="category">Category</label>
-          <div class="select-wrap" [class.input-error]="fieldError('category')">
-            <select id="category" formControlName="category">
-              <option value="" disabled>Diabatic care...</option>
-              @for (cat of categories; track cat) {
-                <option [value]="cat">{{ cat }}</option>
+          <label for="dosageForm">Dosage Form</label>
+          <div class="select-wrap">
+            <select id="dosageForm" formControlName="dosageForm">
+              <option value="">Select form...</option>
+              @for (form of dosageForms; track form) {
+                <option [value]="form">{{ form | titlecase }}</option>
               }
             </select>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 1024 1024">
               <path fill="#64748B" d="M8.2 275.4c0-8.6 3.4-17.401 10-24.001c13.2-13.2 34.8-13.2 48 0l451.8 451.8l445.2-445.2c13.2-13.2 34.8-13.2 48 0s13.2 34.8 0 48L542 775.399c-13.2 13.2-34.8 13.2-48 0l-475.8-475.8c-6.8-6.8-10-15.4-10-24.199"/>
             </svg>
           </div>
-          @if (fieldError('category')) {
-            <span class="error-msg">{{ fieldError('category') }}</span>
+        </div>
+      </div>
+
+      <!-- Quantity Amount + Unit row -->
+      <div class="field-row">
+        <div class="field">
+          <label for="quantityAmount">Required Quantity</label>
+          <div class="input-wrap" [class.input-error]="fieldError('quantityAmount')">
+            <input id="quantityAmount" type="number" formControlName="quantityAmount"
+                   placeholder="Number of units" />
+          </div>
+          @if (fieldError('quantityAmount')) {
+            <span class="error-msg">{{ fieldError('quantityAmount') }}</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="quantityUnit">Unit</label>
+          <div class="select-wrap" [class.input-error]="fieldError('quantityUnit')">
+            <select id="quantityUnit" formControlName="quantityUnit">
+              <option value="" disabled>Select unit...</option>
+              @for (u of units; track u) {
+                <option [value]="u">{{ u | titlecase }}</option>
+              }
+            </select>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 1024 1024">
+              <path fill="#64748B" d="M8.2 275.4c0-8.6 3.4-17.401 10-24.001c13.2-13.2 34.8-13.2 48 0l451.8 451.8l445.2-445.2c13.2-13.2 34.8-13.2 48 0s13.2 34.8 0 48L542 775.399c-13.2 13.2-34.8 13.2-48 0l-475.8-475.8c-6.8-6.8-10-15.4-10-24.199"/>
+            </svg>
+          </div>
+          @if (fieldError('quantityUnit')) {
+            <span class="error-msg">{{ fieldError('quantityUnit') }}</span>
           }
         </div>
       </div>
     </section>
 
-    <!-- Packaging Photos -->
-    <section class="form-section photos-section">
+    <!-- Priority & Expiry -->
+    <section class="form-section">
       <div class="section-heading">
-        <h2>Packaging Photos</h2>
-        <span class="heading-note">Max 3 files, 5MB each</span>
+        <h2>Priority & Expiry</h2>
       </div>
 
-      <div class="dropzone" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)"
-           (click)="fileInput.click()">
-        <input #fileInput type="file" multiple accept="image/*" hidden (change)="onFileSelect($event)" />
-        <div class="dropzone-content">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none">
-            <g stroke="#238378" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
-              <path d="M22 9v6c0 2.828 0 4.243-.878 5.121C20.242 21 18.829 21 16 21H8c-2.828 0-4.242 0-5.121-.879C2 19.243 2 17.828 2 15v-3.946c0-.98 0-1.47.114-1.871a3 3 0 0 1 2.07-2.07C4.583 7 5.073 7 6.053 7c.366 0 .549 0 .72-.03a2 2 0 0 0 1.105-.591c.119-.126.418-.574.621-.879c.397-.595.595-.892.866-1.096a2 2 0 0 1 .545-.292C10.23 4 10.588 4 11.303 4H13"/>
-              <path d="M16 13.5a4 4 0 1 1-8 0a4 4 0 0 1 8 0m0-8h5M18.5 8V3"/>
-            </g>
-          </svg>
-          <div class="dropzone-text">
-            <p class="drop-title">Click to upload or drag and drop</p>
-            <p class="drop-sub">Clear photos of label and expiration date required</p>
+      <div class="field-row">
+        <div class="field">
+          <label for="priority">Priority</label>
+          <div class="select-wrap">
+            <select id="priority" formControlName="priority">
+              @for (p of priorities; track p) {
+                <option [value]="p">{{ p | titlecase }}</option>
+              }
+            </select>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 1024 1024">
+              <path fill="#64748B" d="M8.2 275.4c0-8.6 3.4-17.401 10-24.001c13.2-13.2 34.8-13.2 48 0l451.8 451.8l445.2-445.2c13.2-13.2 34.8-13.2 48 0s13.2 34.8 0 48L542 775.399c-13.2 13.2-34.8 13.2-48 0l-475.8-475.8c-6.8-6.8-10-15.4-10-24.199"/>
+            </svg>
           </div>
         </div>
-      </div>
 
-      @if (files().length) {
-        <div class="file-list">
-          @for (f of files(); track f.name; let i = $index) {
-            <div class="file-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="#238378" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-              </svg>
-              <span>{{ f.name }}</span>
-              <button type="button" class="remove-file" (click)="removeFile(i)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            </div>
+        <div class="field">
+          <label for="expiresAt">Needed Before</label>
+          <div class="input-wrap" [class.input-error]="fieldError('expiresAt')">
+            <input id="expiresAt" type="date" formControlName="expiresAt"
+                   [min]="minDate" />
+          </div>
+          @if (fieldError('expiresAt')) {
+            <span class="error-msg">{{ fieldError('expiresAt') }}</span>
           }
         </div>
-      }
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section class="form-section">
+      <div class="section-heading">
+        <h2>Additional Notes</h2>
+        <span class="heading-note">Optional</span>
+      </div>
+
+      <div class="field">
+        <div class="textarea-wrap">
+          <textarea id="notes" formControlName="notes" rows="4"
+                    placeholder="Any additional details about this request..."></textarea>
+        </div>
+      </div>
     </section>
 
     <!-- Actions -->

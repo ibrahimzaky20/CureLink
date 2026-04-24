@@ -50,11 +50,6 @@
   width: 100%;
 }
 
-.photos-section {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
 
 .section-heading {
   display: flex;
@@ -96,7 +91,8 @@
   }
 }
 
-.field + .field-row {
+.field + .field-row,
+.field-row + .field-row {
   margin-top: 16px;
 }
 
@@ -205,86 +201,36 @@
   margin-bottom: 8px;
 }
 
-/* ── Dropzone ── */
-.dropzone {
-  background: #F0FDFA;
-  border: 1.5px dashed #B2DDD9;
+/* ── Textarea ── */
+.textarea-wrap {
+  display: flex;
+  background: #fff;
+  border: 1px solid #E2E8F0;
   border-radius: 12px;
-  width: 100%;
-  height: 237px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  padding: 16px;
   box-sizing: border-box;
+  transition: border-color 0.2s;
 
-  &:hover {
+  &:hover { border-color: #CBD5E1; }
+
+  &:focus-within {
     border-color: #238378;
-    background: #E7F9F7;
+    box-shadow: 0 0 0 3px rgba(35, 131, 120, 0.08);
   }
-}
 
-.dropzone-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  text-align: center;
-}
+  textarea {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #0F172A;
+    background: transparent;
+    resize: vertical;
+    min-height: 80px;
 
-.dropzone-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.drop-title {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  color: #0F172A;
-  margin: 0;
-}
-
-.drop-sub {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #64748B;
-  margin: 0;
-}
-
-/* ── File List ── */
-.file-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 8px;
-}
-
-.file-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #F8FAFC;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 13px;
-  color: #334155;
-
-  span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-}
-
-.remove-file {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #94A3B8;
-  display: flex;
-  padding: 2px;
-
-  &:hover { color: #EF4444; }
+    &::placeholder { color: #94A3B8; }
+  }
 }
 
 /* ── Actions ── */

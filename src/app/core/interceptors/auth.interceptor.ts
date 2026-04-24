@@ -23,6 +23,11 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const isPublic = PUBLIC_PATHS.some(p => req.url.includes(p));
 
+  const token = auth.getToken();
+  if (token && !isPublic) {
+    req = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
+  }
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && !isRefreshing && !isPublic) {
@@ -30,7 +35,11 @@ export const authInterceptor: HttpInterceptorFn = (
         return auth.refreshToken().pipe(
           switchMap(() => {
             isRefreshing = false;
-            return next(req);
+            const newToken = auth.getToken();
+            const retryReq = newToken
+              ? req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } })
+              : req;
+            return next(retryReq);
           }),
           catchError(refreshErr => {
             isRefreshing = false;

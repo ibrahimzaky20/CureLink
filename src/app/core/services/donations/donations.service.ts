@@ -51,12 +51,17 @@ export class DonationsService {
   private readonly api  = environment.apiUrl;
   private readonly opts = { withCredentials: true };
 
-  getAll(page = 1, limit = 20): Observable<DonationsListResponse> {
-    const params = new HttpParams().set('page', page).set('limit', limit);
+  getAll(page = 1, limit = 20, status?: string): Observable<DonationsListResponse> {
+    let params = new HttpParams().set('page', page).set('limit', limit);
+    if (status) params = params.set('status', status);
     return this.http.get<DonationsListResponse>(`${this.api}/api/v1/donations`, { ...this.opts, params });
   }
 
   getById(id: string): Observable<DonationResponse> {
     return this.http.get<DonationResponse>(`${this.api}/api/v1/donations/${id}`, this.opts);
+  }
+
+  delete(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.api}/api/v1/donations/${id}`, this.opts);
   }
 }

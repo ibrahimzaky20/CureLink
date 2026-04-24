@@ -3,6 +3,8 @@
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 24px;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
 .page-title {
@@ -21,12 +23,34 @@
   color: var(--color-gray);
 }
 
+.donate-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1.5px solid #238378;
+  border-radius: 8px;
+  padding: 10px 18px;
+  color: #238378;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  text-decoration: none;
+
+  &:hover { background: #E7F9F7; }
+}
 
 .card {
   background: #fff;
   border-radius: 14px;
   padding: 24px;
   box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .card-title {
@@ -34,9 +58,42 @@
   font-size: 16px;
   font-weight: 600;
   color: var(--color-text);
-  margin-bottom: 16px;
+  margin: 0;
 }
 
+/* ── Toolbar ── */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  background: #F8FAFC;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748B;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover { background: #E7F9F7; color: #238378; }
+  &.active { background: #E7F9F7; color: #238378; }
+}
+
+/* ── Table ── */
 .donations-table {
   width: 100%;
   border-collapse: collapse;
@@ -45,88 +102,159 @@
     font-size: 13px;
     font-weight: 500;
     color: var(--color-gray);
-    text-align: center;
+    text-align: left;
     padding: 8px 12px 14px;
     white-space: nowrap;
   }
 
   td {
-    text-align: center;
-    padding: 18px 12px;
+    text-align: left;
+    padding: 16px 12px;
     font-size: 14px;
     color: var(--color-text);
     border-top: 1px solid #F1F5F9;
+    white-space: nowrap;
   }
 
-  .med-name { font-weight: 500; text-align: left; }
-  .qty-col { color: var(--color-primary); font-weight: 500; }
+  .med-name { font-weight: 500; }
+  .qty-col  { color: var(--color-primary); font-weight: 500; }
   .date-col { color: var(--color-gray); }
 }
 
+/* ── Priority Badges ── */
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.priority-low    { background: #F1F5F9; color: #64748B; }
+  &.priority-medium { background: #DBEAFE; color: #2563EB; }
+  &.priority-high   { background: #FEF3C7; color: #D97706; }
+}
+
+/* ── Status Badges ── */
 .status-badge {
   display: inline-block;
-  padding: 6px 20px;
+  padding: 5px 14px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
-
-  &.delivered {
-    color: var(--color-primary-dark);
-    background: var(--color-primary-light);
-    border: 1px solid var(--color-primary-border);
-  }
-
-  &.approved {
-    color: var(--color-primary-dark);
-    background: var(--color-primary-light);
-    border: 1px solid var(--color-primary-border);
-  }
 
   &.pending {
     color: #92400E;
     background: #FFFBEB;
     border: 1px solid #FDE68A;
   }
-}
 
-.progress-track {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  &.admin_review {
+    color: #9333EA;
+    background: #FAF5FF;
+    border: 1px solid #E9D5FF;
+  }
 
-.step {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid #CBD5E1;
-  background: #fff;
-  color: #CBD5E1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  &.available {
+    color: #238378;
+    background: #E7F9F7;
+    border: 1px solid #B2DDD9;
+  }
 
-  &.active {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
-    color: #fff;
+  &.matched {
+    color: #2563EB;
+    background: #DBEAFE;
+    border: 1px solid #BFDBFE;
+  }
+
+  &.approved_by_institution {
+    color: #16A34A;
+    background: #DCFCE7;
+    border: 1px solid #BBF7D0;
+  }
+
+  &.delivered {
+    color: #238378;
+    background: #E7F9F7;
+    border: 1px solid #B2DDD9;
+  }
+
+  &.rejected {
+    color: #DC2626;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+  }
+
+  &.expired, &.cancelled {
+    color: #64748B;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
   }
 }
 
-.track-line {
-  width: 28px;
-  height: 2px;
-  background: #CBD5E1;
+/* ── Delete Button ── */
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94A3B8;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s, background 0.15s;
 
-  &.active { background: var(--color-primary); }
+  &:hover { color: #EF4444; background: #FEF2F2; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
-.step-num {
-  font-size: 11px;
-  font-weight: 600;
-  color: #CBD5E1;
-  line-height: 1;
+/* ── Loading / Empty ── */
+.loading-row {
+  text-align: center;
+  color: #64748B;
+  padding: 40px 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+.empty-row {
+  text-align: center;
+  color: #64748B;
+  padding: 40px 0 !important;
+}
+
+/* ── Pagination ── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.page-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover:not(:disabled) { background: #E7F9F7; border-color: #238378; color: #238378; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.page-info {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #64748B;
 }
 
 /* ── Responsive ── */
@@ -143,7 +271,7 @@
   }
 
   .donations-table {
-    min-width: 520px;
+    min-width: 600px;
     th, td { padding: 10px 8px; font-size: 12px; }
   }
 }

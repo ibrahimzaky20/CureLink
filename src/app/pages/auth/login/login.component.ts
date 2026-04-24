@@ -76,10 +76,11 @@ export class LoginComponent implements OnInit {
         }
 
         if (user.role === 'institution') {
-          if (user.isVerified) {
+          if (res?.data?.institutionStatus === 'verified') {
             this.router.navigate(['/for-institution']);
           } else {
-            this.serverError.set('Your institution is pending admin approval. You will be notified once verified.');
+            this.auth.clearUser();
+            this.serverError.set('Your institution is still under admin review. You will be notified once approved.');
           }
         }
       },
