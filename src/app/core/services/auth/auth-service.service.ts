@@ -50,12 +50,12 @@ export class AuthServiceService {
 
   saveToken(token: string): void {
     if (!this.isBrowser()) return;
-    localStorage.setItem('userToken', token);
+    sessionStorage.setItem('access_token', token);
   }
 
   getToken(): string {
     if (!this.isBrowser()) return '';
-    return localStorage.getItem('userToken') ?? '';
+    return sessionStorage.getItem('access_token') ?? '';
   }
 
   saveUser(user: AuthUser): void {
@@ -72,7 +72,6 @@ export class AuthServiceService {
   clearUser(): void {
     if (!this.isBrowser()) return;
     localStorage.removeItem('auth_user');
-    localStorage.removeItem('userToken');
     this.currentUser.set(null);
   }
 
