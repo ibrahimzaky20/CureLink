@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { DonationsService, Donation } from '../../../../core/services/donations/donations.service';
 
-type Filter = 'all' | 'pending' | 'available' | 'matched' | 'delivered' | 'rejected' | 'expired';
+type Filter = 'all' | 'pending' | 'approved' | 'rejected' | 'delivered' | 'cancelled';
 
 @Component({
   selector: 'app-my-donations',
@@ -15,7 +15,7 @@ export class MyDonationsComponent implements OnInit {
   private readonly api = inject(DonationsService);
 
   activeFilter = signal<Filter>('all');
-  filters: Filter[] = ['all', 'pending', 'available', 'matched', 'delivered', 'rejected', 'expired'];
+  filters: Filter[] = ['all', 'pending', 'approved', 'rejected', 'delivered', 'cancelled'];
 
   donations  = signal<Donation[]>([]);
   loading    = signal(true);
