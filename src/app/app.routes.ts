@@ -55,6 +55,10 @@ export const routes: Routes = [
       {
         path: 'notifications',
         loadComponent: () => import('./pages/for-donor/pages/notifications/notifications.component').then(m => m.NotificationsComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/for-donor/pages/profile/profile.component').then(m => m.ProfileComponent)
       }
     ]
   },
