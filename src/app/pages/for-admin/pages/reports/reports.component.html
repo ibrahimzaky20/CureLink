@@ -1,0 +1,318 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Reports</h1>
+    <p class="page-subtitle">Generate, view, and download platform reports.</p>
+  </div>
+  <button class="btn-generate" (click)="openGenerateModal()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    Generate Report
+  </button>
+</div>
+
+<!-- Filters -->
+<div class="filter-group">
+  <div class="filters-bar">
+    <button class="filter-chip" [class.active]="typeFilter() === ''" (click)="onTypeFilter('')">All Types</button>
+    <button class="filter-chip" [class.active]="typeFilter() === 'donations'" (click)="onTypeFilter('donations')">Donations</button>
+    <button class="filter-chip" [class.active]="typeFilter() === 'institutions'" (click)="onTypeFilter('institutions')">Institutions</button>
+    <button class="filter-chip" [class.active]="typeFilter() === 'requests'" (click)="onTypeFilter('requests')">Requests</button>
+    <button class="filter-chip" [class.active]="typeFilter() === 'matching'" (click)="onTypeFilter('matching')">Matching</button>
+    <button class="filter-chip" [class.active]="typeFilter() === 'monthly_summary'" (click)="onTypeFilter('monthly_summary')">Monthly Summary</button>
+  </div>
+  <div class="filters-bar">
+    <button class="filter-chip" [class.active]="statusFilter() === ''" (click)="onStatusFilter('')">All Status</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'ready'" (click)="onStatusFilter('ready')">Ready</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'processing'" (click)="onStatusFilter('processing')">Processing</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'failed'" (click)="onStatusFilter('failed')">Failed</button>
+  </div>
+</div>
+
+<!-- Reports Table -->
+<div class="card">
+  @if (loading()) {
+    <div class="loading-msg">Loading reports...</div>
+  } @else if (reports().length === 0) {
+    <p class="empty-msg">No reports found. Click "Generate Report" to create one.</p>
+  } @else {
+    <div class="table-header">
+      <span class="total-count">{{ total() }} reports</span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Format</th>
+            <th>Size</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of reports(); track r._id) {
+            <tr>
+              <td class="primary-col title-col" (click)="openDetail(r)">
+                <div class="report-icon" [ngClass]="r.format">
+                  @if (r.format === 'pdf') {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/>
+                      <line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/>
+                    </svg>
+                  }
+                </div>
+                {{ r.title ?? r.fileName ?? 'Untitled Report' }}
+              </td>
+              <td>
+                <span class="type-badge">{{ getTypeLabel(r.type) }}</span>
+              </td>
+              <td>
+                <span class="format-badge" [ngClass]="r.format">{{ r.format | uppercase }}</span>
+              </td>
+              <td class="date-col">{{ formatFileSize(r.fileSize) }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(r.status)">{{ r.status }}</span>
+              </td>
+              <td class="date-col">{{ r.createdAt | date:'mediumDate' }}</td>
+              <td class="actions-col">
+                @if (r.status === 'ready') {
+                  <button class="action-btn download" title="Download" (click)="download(r)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                  </button>
+                }
+                <button class="action-btn view" title="View Details" (click)="openDetail(r)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+                <button class="action-btn delete" title="Delete" (click)="openDeleteModal(r)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button class="page-btn" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">Previous</button>
+        <span class="page-info">Page {{ page() }} of {{ totalPages() }}</span>
+        <button class="page-btn" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">Next</button>
+      </div>
+    }
+  }
+</div>
+
+<!-- Generate Report Modal -->
+@if (showGenerateModal()) {
+  <div class="modal-overlay" (click)="closeGenerateModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Generate Report</h3>
+      <p class="modal-subtitle">Select the type and format for your report.</p>
+
+      <label class="modal-label">Report Type</label>
+      <select class="modal-select" [ngModel]="genType()" (ngModelChange)="genType.set($event)">
+        <option value="donations">Donations</option>
+        <option value="institutions">Institutions</option>
+        <option value="requests">Requests</option>
+        <option value="matching">Matching</option>
+        <option value="monthly_summary">Monthly Summary</option>
+      </select>
+
+      <label class="modal-label">Format</label>
+      <div class="format-row">
+        <button class="format-option" [class.active]="genFormat() === 'pdf'" (click)="genFormat.set('pdf')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          PDF
+        </button>
+        <button class="format-option" [class.active]="genFormat() === 'excel'" (click)="genFormat.set('excel')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/>
+          </svg>
+          Excel
+        </button>
+      </div>
+
+      @if (genType() === 'monthly_summary') {
+        <div class="date-row">
+          <div class="date-field">
+            <label class="modal-label">Year</label>
+            <input type="number" class="modal-input" [ngModel]="genYear()" (ngModelChange)="genYear.set($event)"/>
+          </div>
+          <div class="date-field">
+            <label class="modal-label">Month</label>
+            <select class="modal-select" [ngModel]="genMonth()" (ngModelChange)="genMonth.set($event)">
+              <option [value]="1">January</option>
+              <option [value]="2">February</option>
+              <option [value]="3">March</option>
+              <option [value]="4">April</option>
+              <option [value]="5">May</option>
+              <option [value]="6">June</option>
+              <option [value]="7">July</option>
+              <option [value]="8">August</option>
+              <option [value]="9">September</option>
+              <option [value]="10">October</option>
+              <option [value]="11">November</option>
+              <option [value]="12">December</option>
+            </select>
+          </div>
+        </div>
+      } @else {
+        <div class="date-row">
+          <div class="date-field">
+            <label class="modal-label">Start Date</label>
+            <input type="date" class="modal-input" [ngModel]="genStartDate()" (ngModelChange)="genStartDate.set($event)"/>
+          </div>
+          <div class="date-field">
+            <label class="modal-label">End Date</label>
+            <input type="date" class="modal-input" [ngModel]="genEndDate()" (ngModelChange)="genEndDate.set($event)"/>
+          </div>
+        </div>
+
+        @if (genType() === 'donations' || genType() === 'requests') {
+          <div class="date-row">
+            <div class="date-field">
+              <label class="modal-label">Status (optional)</label>
+              <input type="text" class="modal-input" placeholder="e.g. pending, approved"
+                [ngModel]="genStatus()" (ngModelChange)="genStatus.set($event)"/>
+            </div>
+            <div class="date-field">
+              <label class="modal-label">Priority (optional)</label>
+              <input type="text" class="modal-input" placeholder="e.g. high, medium"
+                [ngModel]="genPriority()" (ngModelChange)="genPriority.set($event)"/>
+            </div>
+          </div>
+        }
+      }
+
+      @if (genError()) {
+        <p class="error-msg">{{ genError() }}</p>
+      }
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeGenerateModal()">Cancel</button>
+        <button class="btn-primary" (click)="generateReport()" [disabled]="generating()">
+          {{ generating() ? 'Generating...' : 'Generate' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Report Detail Modal -->
+@if (showDetailModal() && selectedReport()) {
+  <div class="modal-overlay" (click)="closeDetail()">
+    <div class="modal modal-lg" (click)="$event.stopPropagation()">
+      <button type="button" class="modal-close-btn" (click)="closeDetail()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <h3 class="modal-title">{{ selectedReport().title ?? 'Report Details' }}</h3>
+      <p class="modal-subtitle">{{ selectedReport().fileName ?? '' }}</p>
+
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">Type</span>
+          <span class="type-badge">{{ getTypeLabel(selectedReport().type) }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Format</span>
+          <span class="format-badge" [ngClass]="selectedReport().format">{{ selectedReport().format | uppercase }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Status</span>
+          <span class="status-badge" [ngClass]="getStatusClass(selectedReport().status)">{{ selectedReport().status }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">File Size</span>
+          <span class="detail-value">{{ formatFileSize(selectedReport().fileSize) }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Generated By</span>
+          <span class="detail-value">{{ selectedReport().generatedBy?.firstName ?? '' }} {{ selectedReport().generatedBy?.lastName ?? '' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Created</span>
+          <span class="detail-value">{{ selectedReport().createdAt | date:'medium' }}</span>
+        </div>
+      </div>
+
+      @if (selectedReport().filters) {
+        <div class="filters-section">
+          <span class="detail-label">Filters Applied</span>
+          <div class="filter-tags">
+            @for (key of objectKeys(selectedReport().filters); track key) {
+              @if (selectedReport().filters[key]) {
+                <span class="filter-tag">{{ key }}: {{ selectedReport().filters[key] }}</span>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      <div class="modal-actions">
+        @if (selectedReport().status === 'ready') {
+          <button class="btn-primary" (click)="download(selectedReport())">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download
+          </button>
+        }
+        <button class="btn-secondary" (click)="closeDetail()">Close</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal()) {
+  <div class="modal-overlay" (click)="closeDeleteModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Delete Report</h3>
+      <p class="modal-subtitle">Are you sure you want to permanently delete <strong>{{ selectedReport()?.title ?? 'this report' }}</strong>? This action cannot be undone.</p>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+        <button class="btn-danger" (click)="confirmDelete()" [disabled]="actionLoading()">
+          {{ actionLoading() ? 'Deleting...' : 'Delete Report' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

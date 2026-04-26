@@ -9,6 +9,24 @@ export class AdminService {
   private readonly api  = environment.apiUrl;
   private readonly opts = { withCredentials: true };
 
+  // ── Dashboard ─────────────────────────────────────────────────────────
+
+  getDashboardStats(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/admin/dashboard/stats`, this.opts);
+  }
+
+  getRecentActivity(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/admin/dashboard/recent-activity`, this.opts);
+  }
+
+  getSystemSummary(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/admin/dashboard/summary`, this.opts);
+  }
+
+  getAlerts(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/admin/dashboard/alerts`, this.opts);
+  }
+
   // ── Donations ─────────────────────────────────────────────────────────
 
   getDonations(page = 1, limit = 10, filters?: { status?: string; medicineId?: string; donorId?: string }): Observable<any> {
@@ -50,6 +68,73 @@ export class AdminService {
       ...this.opts,
       responseType: 'blob'
     });
+  }
+
+  // ── Users ─────────────────────────────────────────────────────────────
+
+  getUsers(page = 1, limit = 10, filters?: { role?: string; status?: string; search?: string }): Observable<any> {
+    let params = new HttpParams().set('page', page).set('limit', limit);
+    if (filters?.role)   params = params.set('role', filters.role);
+    if (filters?.status) params = params.set('status', filters.status);
+    if (filters?.search) params = params.set('search', filters.search);
+    return this.http.get<any>(`${this.api}/api/v1/admin/users`, { ...this.opts, params });
+  }
+
+  getUser(id: string): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/admin/users/${id}`, this.opts);
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.api}/api/v1/admin/users/${id}`, this.opts);
+  }
+
+  changeUserRole(id: string, role: string): Observable<any> {
+    return this.http.patch<any>(`${this.api}/api/v1/admin/users/${id}/role`, { role }, this.opts);
+  }
+
+  toggleUserStatus(id: string, isActive: boolean): Observable<any> {
+    return this.http.patch<any>(`${this.api}/api/v1/admin/users/${id}/status`, { isActive }, this.opts);
+  }
+
+  getUserActivity(id: string): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/admin/users/${id}/activity`, this.opts);
+  }
+
+  exportUsers(): Observable<Blob> {
+    return this.http.post(`${this.api}/api/v1/admin/users/export`, {}, {
+      ...this.opts,
+      responseType: 'blob'
+    });
+  }
+
+  // ── Reports ───────────────────────────────────────────────────────────
+
+  generateReport(type: string, body: any): Observable<any> {
+    return this.http.post<any>(`${this.api}/api/v1/reports/generate/${type}`, body, this.opts);
+  }
+
+  getReports(page = 1, limit = 10, filters?: { type?: string; status?: string; startDate?: string; endDate?: string }): Observable<any> {
+    let params = new HttpParams().set('page', page).set('limit', limit);
+    if (filters?.type)      params = params.set('type', filters.type);
+    if (filters?.status)    params = params.set('status', filters.status);
+    if (filters?.startDate) params = params.set('startDate', filters.startDate);
+    if (filters?.endDate)   params = params.set('endDate', filters.endDate);
+    return this.http.get<any>(`${this.api}/api/v1/reports`, { ...this.opts, params });
+  }
+
+  getReport(id: string): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/reports/${id}`, this.opts);
+  }
+
+  downloadReport(id: string): Observable<Blob> {
+    return this.http.get(`${this.api}/api/v1/reports/${id}/download`, {
+      ...this.opts,
+      responseType: 'blob'
+    });
+  }
+
+  deleteReport(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.api}/api/v1/reports/${id}`, this.opts);
   }
 
   // ── Institutions ──────────────────────────────────────────────────────

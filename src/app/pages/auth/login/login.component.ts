@@ -3,6 +3,7 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthServiceService } from '../../../core/services/auth/auth-service.service';
 
+type ResetStep = 'email' | 'otp' | 'password';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,27 @@ export class LoginComponent implements OnInit {
   form = this.fb.group({
     email:    ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
+  });
+
+  // ── Forgot Password State ──
+  showReset       = signal(false);
+  resetStep       = signal<ResetStep>('email');
+  resetLoading    = signal(false);
+  resetError      = signal('');
+  resetSuccess    = signal('');
+  showNewPassword = signal(false);
+
+  resetEmailForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]]
+  });
+
+  resetOtpForm = this.fb.group({
+    otp: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
+  });
+
+  resetPasswordForm = this.fb.group({
+    password:        ['', [Validators.required, Validators.minLength(8)]],
+    confirmPassword: ['', Validators.required]
   });
 
   ngOnInit() {
@@ -88,5 +110,109 @@ export class LoginComponent implements OnInit {
         this.serverError.set(err?.error?.message ?? 'Invalid email or password.');
       }
     });
+  }
+
+  // ── Forgot Password Flow ──
+  openReset() {
+    this.showReset.set(true);
+    this.resetStep.set('email');
+    this.resetError.set('');
+    this.resetSuccess.set('');
+    this.resetEmailForm.reset({ email: this.form.value.email ?? '' });
+    this.resetOtpForm.reset();
+    this.resetPasswordForm.reset();
+  }
+
+  closeReset() {
+    this.showReset.set(false);
+  }
+
+  resetFieldError(form: 'email' | 'otp' | 'password', field: string): string {
+    let ctrl: any;
+    if (form === 'email')    ctrl = this.resetEmailForm.get(field);
+    else if (form === 'otp') ctrl = this.resetOtpForm.get(field);
+    else                     ctrl = this.resetPasswordForm.get(field);
+
+    if (!ctrl?.touched || !ctrl.errors) return '';
+    if (ctrl.errors['required'])  return 'This field is required.';
+    if (ctrl.errors['email'])     return 'Enter a valid email address.';
+    if (ctrl.errors['minlength']) return field === 'otp' ? 'Code must be 6 digits.' : 'Password must be at least 8 characters.';
+    return '';
+  }
+
+  sendResetCode() {
+    this.resetEmailForm.markAllAsTouched();
+    if (this.resetEmailForm.invalid) return;
+
+    this.resetLoading.set(true);
+    this.resetError.set('');
+
+    const email = this.resetEmailForm.value.email!;
+    this.auth.forgotPassword(email).subscribe({
+      next: () => {
+        this.resetLoading.set(false);
+        this.resetStep.set('otp');
+      },
+      error: err => {
+        this.resetLoading.set(false);
+        this.resetError.set(err?.error?.message ?? 'Failed to send reset code. Please try again.');
+      }
+    });
+  }
+
+  verifyResetOtp() {
+    this.resetOtpForm.markAllAsTouched();
+    if (this.resetOtpForm.invalid) return;
+
+    this.resetLoading.set(true);
+    this.resetError.set('');
+
+    const email = this.resetEmailForm.value.email!;
+    const otp   = this.resetOtpForm.value.otp!;
+
+    this.auth.verifyResetOtp(email, otp).subscribe({
+      next: () => {
+        this.resetLoading.set(false);
+        this.resetStep.set('password');
+      },
+      error: err => {
+        this.resetLoading.set(false);
+        this.resetError.set(err?.error?.message ?? 'Invalid code. Please try again.');
+      }
+    });
+  }
+
+  submitNewPassword() {
+    this.resetPasswordForm.markAllAsTouched();
+    if (this.resetPasswordForm.invalid) return;
+
+    const { password, confirmPassword } = this.resetPasswordForm.value;
+    if (password !== confirmPassword) {
+      this.resetError.set('Passwords do not match.');
+      return;
+    }
+
+    this.resetLoading.set(true);
+    this.resetError.set('');
+
+    const email = this.resetEmailForm.value.email!;
+    const otp   = this.resetOtpForm.value.otp!;
+
+    this.auth.resetPassword(email, otp, password!).subscribe({
+      next: () => {
+        this.resetLoading.set(false);
+        this.resetSuccess.set('Password reset successfully! You can now sign in.');
+        setTimeout(() => this.closeReset(), 2500);
+      },
+      error: err => {
+        this.resetLoading.set(false);
+        this.resetError.set(err?.error?.message ?? 'Failed to reset password. Please try again.');
+      }
+    });
+  }
+
+  sanitizeOtp(input: HTMLInputElement) {
+    input.value = input.value.replace(/\D/g, '').slice(0, 6);
+    this.resetOtpForm.get('otp')!.setValue(input.value);
   }
 }

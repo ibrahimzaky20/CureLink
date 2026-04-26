@@ -1,12 +1,12 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgClass } from '@angular/common';
+import { NgClass, DatePipe } from '@angular/common';
 import { AdminService } from '../../../../core/services/admin/admin.service';
 import { AuthServiceService } from '../../../../core/services/auth/auth-service.service';
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [RouterLink, NgClass],
+  imports: [RouterLink, NgClass, DatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -26,6 +26,11 @@ export class DashboardComponent implements OnInit {
   recentDonations = signal<any[]>([]);
   pendingInstitutions = signal<any[]>([]);
   expiringDonations = signal<any[]>([]);
+
+  recentActivity = signal<any[]>([]);
+  systemSummary = signal<any>(null);
+  alerts = signal<any[]>([]);
+
   loading = signal(true);
 
   ngOnInit() {
@@ -74,6 +79,42 @@ export class DashboardComponent implements OnInit {
       },
       error: () => this.loading.set(false)
     });
+
+    this.admin.getRecentActivity().subscribe({
+      next: res => this.recentActivity.set(res?.data?.slice(0, 8) ?? []),
+      error: () => {}
+    });
+
+    this.admin.getSystemSummary().subscribe({
+      next: res => this.systemSummary.set(res?.data ?? null),
+      error: () => {}
+    });
+
+    this.admin.getAlerts().subscribe({
+      next: res => this.alerts.set(res?.data ?? []),
+      error: () => {}
+    });
+  }
+
+  getAlertClass(level: string): string {
+    if (level === 'critical') return 'alert-critical';
+    if (level === 'warning')  return 'alert-warning';
+    return 'alert-info';
+  }
+
+  formatGrowth(value: number): string {
+    if (value > 0) return `+${value}%`;
+    if (value < 0) return `${value}%`;
+    return '0%';
+  }
+
+  getActivityIcon(type: string): string {
+    const t = type?.toUpperCase();
+    if (t?.includes('USER'))       return 'user';
+    if (t?.includes('DONATION'))   return 'donation';
+    if (t?.includes('INSTITUTION')) return 'institution';
+    if (t?.includes('REQUEST'))    return 'request';
+    return 'default';
   }
 
   getStatusClass(status: string): string {

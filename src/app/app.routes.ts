@@ -119,6 +119,14 @@ export const routes: Routes = [
       {
         path: 'pending-institutions',
         loadComponent: () => import('./pages/for-admin/pages/pending-institutions/pending-institutions.component').then(m => m.PendingInstitutionsComponent)
+      },
+      {
+        path: 'user-management',
+        loadComponent: () => import('./pages/for-admin/pages/user-management/user-management.component').then(m => m.UserManagementComponent)
+      },
+      {
+        path: 'reports',
+        loadComponent: () => import('./pages/for-admin/pages/reports/reports.component').then(m => m.ReportsComponent)
       }
     ]
   },

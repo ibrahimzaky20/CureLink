@@ -173,6 +173,18 @@ export class AuthServiceService {
     return this.http.post<any>(`${this.api}/api/v1/institutions/register`, form, opts);
   }
 
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post<any>(`${this.api}/api/v1/auth/forgot-password`, { email }, this.opts);
+  }
+
+  verifyResetOtp(email: string, otp: string): Observable<any> {
+    return this.http.post<any>(`${this.api}/api/v1/auth/verify-reset-otp`, { email, otp }, this.opts);
+  }
+
+  resetPassword(email: string, otp: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.api}/api/v1/auth/reset-password`, { email, otp, password }, this.opts);
+  }
+
   addDocuments(document: File): Observable<any> {
     const form = new FormData();
     form.append('tax_card', document);
