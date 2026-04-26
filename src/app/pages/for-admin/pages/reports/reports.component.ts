@@ -19,7 +19,7 @@ export class ReportsComponent implements OnInit {
   total      = signal(0);
 
   typeFilter   = signal('');
-  statusFilter = signal('');
+  formatFilter = signal('');
 
   // Generate modal
   showGenerateModal = signal(false);
@@ -42,7 +42,7 @@ export class ReportsComponent implements OnInit {
   showDeleteModal = signal(false);
   actionLoading   = signal(false);
 
-  reportTypes = ['donations', 'institutions', 'requests', 'matching', 'monthly_summary'];
+  reportTypes = ['donations', 'institutions', 'requests', 'matching', 'monthly-summary'];
 
   objectKeys = Object.keys;
 
@@ -54,7 +54,7 @@ export class ReportsComponent implements OnInit {
     this.loading.set(true);
     const filters: any = {};
     if (this.typeFilter())   filters.type   = this.typeFilter();
-    if (this.statusFilter()) filters.status = this.statusFilter();
+    if (this.formatFilter()) filters.format = this.formatFilter();
 
     this.admin.getReports(this.page(), 10, filters).subscribe({
       next: res => {
@@ -73,8 +73,8 @@ export class ReportsComponent implements OnInit {
     this.loadReports();
   }
 
-  onStatusFilter(status: string) {
-    this.statusFilter.set(status);
+  onFormatFilter(format: string) {
+    this.formatFilter.set(format);
     this.page.set(1);
     this.loadReports();
   }
@@ -109,7 +109,7 @@ export class ReportsComponent implements OnInit {
 
     let body: any = { format: this.genFormat() };
 
-    if (this.genType() === 'monthly_summary') {
+    if (this.genType() === 'monthly-summary') {
       body.year = this.genYear();
       body.month = this.genMonth();
     } else {
@@ -185,7 +185,8 @@ export class ReportsComponent implements OnInit {
   getStatusClass(status: string): string {
     if (status === 'ready') return 'status-ready';
     if (status === 'processing') return 'status-processing';
-    return 'status-failed';
+    if (status === 'failed') return 'status-failed';
+    return '';
   }
 
   getTypeLabel(type: string): string {

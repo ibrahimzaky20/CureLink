@@ -110,25 +110,19 @@ export class AdminService {
   // ── Reports ───────────────────────────────────────────────────────────
 
   generateReport(type: string, body: any): Observable<any> {
-    return this.http.post<any>(`${this.api}/api/v1/reports/generate/${type}`, body, this.opts);
+    return this.http.post<any>(`${this.api}/api/v1/reports/${type}`, body, this.opts);
   }
 
-  getReports(page = 1, limit = 10, filters?: { type?: string; status?: string; startDate?: string; endDate?: string }): Observable<any> {
+  getReports(page = 1, limit = 10, filters?: { type?: string; format?: string }): Observable<any> {
     let params = new HttpParams().set('page', page).set('limit', limit);
-    if (filters?.type)      params = params.set('type', filters.type);
-    if (filters?.status)    params = params.set('status', filters.status);
-    if (filters?.startDate) params = params.set('startDate', filters.startDate);
-    if (filters?.endDate)   params = params.set('endDate', filters.endDate);
+    if (filters?.type)   params = params.set('type', filters.type);
+    if (filters?.format) params = params.set('format', filters.format);
     return this.http.get<any>(`${this.api}/api/v1/reports`, { ...this.opts, params });
   }
 
-  getReport(id: string): Observable<any> {
-    return this.http.get<any>(`${this.api}/api/v1/reports/${id}`, this.opts);
-  }
-
   downloadReport(id: string): Observable<Blob> {
-    return this.http.get(`${this.api}/api/v1/reports/${id}/download`, {
-      ...this.opts,
+    return this.http.get(`${this.api}/api/v1/reports/${id}`, {
+      withCredentials: true,
       responseType: 'blob'
     });
   }

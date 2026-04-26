@@ -21,13 +21,12 @@
     <button class="filter-chip" [class.active]="typeFilter() === 'institutions'" (click)="onTypeFilter('institutions')">Institutions</button>
     <button class="filter-chip" [class.active]="typeFilter() === 'requests'" (click)="onTypeFilter('requests')">Requests</button>
     <button class="filter-chip" [class.active]="typeFilter() === 'matching'" (click)="onTypeFilter('matching')">Matching</button>
-    <button class="filter-chip" [class.active]="typeFilter() === 'monthly_summary'" (click)="onTypeFilter('monthly_summary')">Monthly Summary</button>
+    <button class="filter-chip" [class.active]="typeFilter() === 'monthly-summary'" (click)="onTypeFilter('monthly-summary')">Monthly Summary</button>
   </div>
   <div class="filters-bar">
-    <button class="filter-chip" [class.active]="statusFilter() === ''" (click)="onStatusFilter('')">All Status</button>
-    <button class="filter-chip" [class.active]="statusFilter() === 'ready'" (click)="onStatusFilter('ready')">Ready</button>
-    <button class="filter-chip" [class.active]="statusFilter() === 'processing'" (click)="onStatusFilter('processing')">Processing</button>
-    <button class="filter-chip" [class.active]="statusFilter() === 'failed'" (click)="onStatusFilter('failed')">Failed</button>
+    <button class="filter-chip" [class.active]="formatFilter() === ''" (click)="onFormatFilter('')">All Formats</button>
+    <button class="filter-chip" [class.active]="formatFilter() === 'pdf'" (click)="onFormatFilter('pdf')">PDF</button>
+    <button class="filter-chip" [class.active]="formatFilter() === 'excel'" (click)="onFormatFilter('excel')">Excel</button>
   </div>
 </div>
 
@@ -140,7 +139,7 @@
         <option value="institutions">Institutions</option>
         <option value="requests">Requests</option>
         <option value="matching">Matching</option>
-        <option value="monthly_summary">Monthly Summary</option>
+        <option value="monthly-summary">Monthly Summary</option>
       </select>
 
       <label class="modal-label">Format</label>
@@ -163,7 +162,7 @@
         </button>
       </div>
 
-      @if (genType() === 'monthly_summary') {
+      @if (genType() === 'monthly-summary') {
         <div class="date-row">
           <div class="date-field">
             <label class="modal-label">Year</label>
