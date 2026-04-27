@@ -107,6 +107,71 @@ export class AdminService {
     });
   }
 
+  // ── Analytics ─────────────────────────────────────────────────────────
+
+  getDonationAnalytics(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/donations`, this.opts);
+  }
+
+  getDonationTrends(period = 'monthly', from?: string, to?: string, limit = 12): Observable<any> {
+    let params = new HttpParams().set('period', period).set('limit', limit);
+    if (from) params = params.set('from', from);
+    if (to)   params = params.set('to', to);
+    return this.http.get<any>(`${this.api}/api/v1/analytics/donations/trends`, { ...this.opts, params });
+  }
+
+  getDonationCategories(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/donations/categories`, this.opts);
+  }
+
+  getDonationGeographic(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/donations/geographic`, this.opts);
+  }
+
+  getInstitutionAnalytics(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/institutions`, this.opts);
+  }
+
+  getInstitutionTypes(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/institutions/types`, this.opts);
+  }
+
+  getInstitutionPerformance(limit = 12): Observable<any> {
+    const params = new HttpParams().set('limit', limit);
+    return this.http.get<any>(`${this.api}/api/v1/analytics/institutions/performance`, { ...this.opts, params });
+  }
+
+  getRequestAnalytics(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/requests`, this.opts);
+  }
+
+  getRequestTrends(period = 'monthly', from?: string, to?: string, limit = 12): Observable<any> {
+    let params = new HttpParams().set('period', period).set('limit', limit);
+    if (from) params = params.set('from', from);
+    if (to)   params = params.set('to', to);
+    return this.http.get<any>(`${this.api}/api/v1/analytics/requests/trends`, { ...this.opts, params });
+  }
+
+  getRequestFulfillment(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/requests/fulfillment`, this.opts);
+  }
+
+  getMatchingAnalytics(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/matching`, this.opts);
+  }
+
+  getMatchingSuccessRate(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/matching/success-rate`, this.opts);
+  }
+
+  getMatchingEfficiency(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/matching/efficiency`, this.opts);
+  }
+
+  getUserAnalytics(): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/analytics/users`, this.opts);
+  }
+
   // ── Reports ───────────────────────────────────────────────────────────
 
   generateReport(type: string, body: any): Observable<any> {

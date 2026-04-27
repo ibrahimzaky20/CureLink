@@ -127,6 +127,10 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadComponent: () => import('./pages/for-admin/pages/reports/reports.component').then(m => m.ReportsComponent)
+      },
+      {
+        path: 'analytics',
+        loadComponent: () => import('./pages/for-admin/pages/analytics/analytics.component').then(m => m.AnalyticsComponent)
       }
     ]
   },
