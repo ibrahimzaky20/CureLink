@@ -114,6 +114,18 @@ export class NotificationsComponent implements OnInit {
     }
   }
 
+  cleanMessage(msg: string): string {
+    return msg?.replace(/\{\{(\w+)\}\}/g, (_, key) => {
+      const labels: Record<string, string> = {
+        medicationName: 'your medication',
+        donationId: 'your donation',
+        institutionName: 'the institution',
+        userName: 'the user',
+      };
+      return labels[key] ?? key;
+    }) ?? '';
+  }
+
   timeAgo(dateStr: string): string {
     const diff = Date.now() - new Date(dateStr).getTime();
     const mins = Math.floor(diff / 60000);

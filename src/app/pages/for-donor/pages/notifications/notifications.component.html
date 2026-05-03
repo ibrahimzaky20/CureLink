@@ -55,7 +55,7 @@
 
           <div class="notif-content">
             <p class="notif-title">{{ n.title }}</p>
-            <p class="notif-message">{{ n.message }}</p>
+            <p class="notif-message">{{ cleanMessage(n.message) }}</p>
             <div class="notif-meta">
               <span class="notif-time">
                 {{ timeAgo(n.createdAt) || (n.createdAt | date:'mediumDate') }}
