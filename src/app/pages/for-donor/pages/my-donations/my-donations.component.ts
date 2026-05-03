@@ -33,7 +33,7 @@ export class MyDonationsComponent implements OnInit {
     const filter = this.activeFilter();
     const status = filter !== 'all' ? filter : undefined;
 
-    this.api.getAll(this.page(), 10, status).subscribe({
+    this.api.getMyDonations(this.page(), 10, status).subscribe({
       next: (res: any) => {
         const data = res?.data ?? res;
         const donations = data?.donations ?? data?.data?.donations ?? (Array.isArray(data) ? data : []);

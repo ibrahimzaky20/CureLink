@@ -54,6 +54,12 @@ export class DonationsService {
   getAll(page = 1, limit = 20, status?: string): Observable<DonationsListResponse> {
     let params = new HttpParams().set('page', page).set('limit', limit);
     if (status) params = params.set('status', status);
+    return this.http.get<DonationsListResponse>(`${this.api}/api/v1/donations`, { ...this.opts, params });
+  }
+
+  getMyDonations(page = 1, limit = 20, status?: string): Observable<DonationsListResponse> {
+    let params = new HttpParams().set('page', page).set('limit', limit);
+    if (status) params = params.set('status', status);
     return this.http.get<DonationsListResponse>(`${this.api}/api/v1/donations/my-donations`, { ...this.opts, params });
   }
 
