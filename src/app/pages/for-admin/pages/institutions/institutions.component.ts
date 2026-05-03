@@ -13,19 +13,33 @@ export class InstitutionsComponent implements OnInit {
 
   institutions = signal<any[]>([]);
   loading      = signal(true);
+  activeTab    = signal<'all' | 'pending'>('all');
 
-  // Detail modal
   showDetail      = signal(false);
   selectedInst    = signal<any>(null);
+  instDocuments   = signal<any[]>([]);
+  docsLoading     = signal(false);
+  docsError       = signal('');
   detailLoading   = signal(false);
+  actionLoading   = signal(false);
+  actionError     = signal('');
 
   ngOnInit() {
-    this.loadInstitutions();
+    this.load();
   }
 
-  loadInstitutions() {
+  switchTab(tab: 'all' | 'pending') {
+    this.activeTab.set(tab);
+    this.load();
+  }
+
+  load() {
     this.loading.set(true);
-    this.admin.getInstitutions().subscribe({
+    const obs = this.activeTab() === 'pending'
+      ? this.admin.getPendingInstitutions()
+      : this.admin.getInstitutions();
+
+    obs.subscribe({
       next: res => {
         this.institutions.set(res?.data?.institutions ?? []);
         this.loading.set(false);
@@ -36,15 +50,35 @@ export class InstitutionsComponent implements OnInit {
 
   viewDetails(inst: any) {
     this.detailLoading.set(true);
+    this.actionError.set('');
+    this.instDocuments.set([]);
     this.showDetail.set(true);
+
     this.admin.getInstitution(inst._id).subscribe({
       next: res => {
         this.selectedInst.set(res?.data?.institution ?? inst);
         this.detailLoading.set(false);
+        this.loadDocuments(inst._id);
       },
       error: () => {
         this.selectedInst.set(inst);
         this.detailLoading.set(false);
+        this.loadDocuments(inst._id);
+      }
+    });
+  }
+
+  private loadDocuments(insId: string) {
+    this.docsLoading.set(true);
+    this.docsError.set('');
+    this.admin.getInstitutionDocuments(insId).subscribe({
+      next: res => {
+        this.instDocuments.set(res?.data?.institutionDocs ?? []);
+        this.docsLoading.set(false);
+      },
+      error: err => {
+        this.docsLoading.set(false);
+        this.docsError.set(err?.error?.message ?? 'Failed to load documents.');
       }
     });
   }
@@ -52,10 +86,46 @@ export class InstitutionsComponent implements OnInit {
   closeDetail() {
     this.showDetail.set(false);
     this.selectedInst.set(null);
+    this.instDocuments.set([]);
+  }
+
+  verify() {
+    const inst = this.selectedInst();
+    if (!inst) return;
+    this.actionLoading.set(true);
+    this.actionError.set('');
+    this.admin.verifyInstitution(inst._id).subscribe({
+      next: () => {
+        this.actionLoading.set(false);
+        this.closeDetail();
+        this.load();
+      },
+      error: err => {
+        this.actionLoading.set(false);
+        this.actionError.set(err?.error?.message ?? 'Failed to verify institution.');
+      }
+    });
+  }
+
+  reject() {
+    const inst = this.selectedInst();
+    if (!inst) return;
+    this.actionLoading.set(true);
+    this.actionError.set('');
+    this.admin.rejectInstitution(inst._id).subscribe({
+      next: () => {
+        this.actionLoading.set(false);
+        this.closeDetail();
+        this.load();
+      },
+      error: err => {
+        this.actionLoading.set(false);
+        this.actionError.set(err?.error?.message ?? 'Failed to reject institution.');
+      }
+    });
   }
 
   getVerifiedClass(inst: any): string {
-    if (inst.isVerified) return 'verified';
-    return 'unverified';
+    return inst.isVerified ? 'verified' : 'unverified';
   }
 }

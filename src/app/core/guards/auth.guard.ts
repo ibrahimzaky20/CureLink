@@ -36,8 +36,21 @@ export const superadminGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   const user = auth.currentUser();
-  if (user?.role === 'superadmin') return true;
+  if (user?.role === 'admin' || user?.role === 'superadmin') return true;
 
   router.navigate(['/auth/login']);
+  return false;
+};
+
+export const superadminOnlyGuard: CanActivateFn = () => {
+  if (!isPlatformBrowser(inject(PLATFORM_ID))) return true;
+
+  const auth   = inject(AuthServiceService);
+  const router = inject(Router);
+
+  const user = auth.currentUser();
+  if (user?.role === 'superadmin') return true;
+
+  router.navigate(['/for-admin']);
   return false;
 };

@@ -11,10 +11,33 @@
 
 .page-subtitle { font-size: 14px; color: var(--color-gray); }
 
+/* ── Tabs ── */
+.tabs-bar {
+  display: flex; gap: 4px; margin-bottom: 16px;
+  border-bottom: 2px solid #F1F5F9;
+}
+
+.tab-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 20px; border: none; background: none;
+  font-size: 14px; font-weight: 500; color: var(--color-gray);
+  cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; transition: all 0.15s;
+
+  &:hover { color: var(--color-primary-dark); }
+
+  &.active {
+    color: var(--color-primary-dark);
+    border-bottom-color: var(--color-primary-dark);
+    font-weight: 600;
+  }
+}
+
 .card {
   background: #fff; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-card);
 }
 
+/* ── Table (All tab) ── */
 .table-wrap { overflow-x: auto; }
 
 .data-table {
@@ -33,6 +56,75 @@
   .primary-col { font-weight: 500; }
 }
 
+.action-btn {
+  width: 32px; height: 32px; border-radius: 8px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.15s;
+
+  &.view { background: #EFF6FF; color: #3B82F6; &:hover { background: #DBEAFE; } }
+}
+
+/* ── Cards Grid (Pending tab) ── */
+.inst-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.inst-card {
+  border: 1px solid #F1F5F9; border-radius: 12px; padding: 20px;
+  cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    border-color: var(--color-primary-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.inst-card-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+}
+
+.inst-avatar {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--color-primary-light);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; overflow: hidden;
+
+  span {
+    font-family: 'Rubik', sans-serif; font-size: 18px; font-weight: 700;
+    color: var(--color-primary-dark);
+  }
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.inst-info { display: flex; flex-direction: column; gap: 2px; }
+.inst-name { font-size: 15px; font-weight: 600; color: var(--color-text, #0F172A); }
+.inst-type { font-size: 12px; color: var(--color-gray); }
+
+.inst-meta { margin-bottom: 14px; }
+
+.meta-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--color-gray);
+}
+
+.inst-docs {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;
+}
+
+.review-btn {
+  width: 100%; padding: 10px; border-radius: 10px;
+  border: 1px solid var(--color-primary-border);
+  background: var(--color-primary-light); color: var(--color-primary-dark);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: #D1F5EF; }
+}
+
+/* ── Status Badge ── */
 .status-badge {
   display: inline-block; padding: 4px 14px; border-radius: 20px;
   font-size: 12px; font-weight: 600; text-transform: capitalize;
@@ -47,14 +139,14 @@
   }
 }
 
-.action-btn {
-  width: 32px; height: 32px; border-radius: 8px; border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background 0.15s;
-
-  &.view { background: #EFF6FF; color: #3B82F6; &:hover { background: #DBEAFE; } }
+/* ── Empty State ── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 48px 0; text-align: center;
 }
 
+.empty-title { font-family: 'Rubik', sans-serif; font-size: 18px; font-weight: 600; }
+.empty-subtitle { font-size: 14px; color: var(--color-gray); }
 .empty-msg { text-align: center; color: var(--color-gray); font-size: 14px; padding: 32px 0; }
 
 /* ── Modal ── */
@@ -71,7 +163,45 @@
 }
 
 .modal-title { font-family: 'Rubik', sans-serif; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+
+.detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+}
+
+.detail-item {
+  display: flex; flex-direction: column; gap: 4px;
+  &.full { grid-column: 1 / -1; }
+}
+
+.detail-label { font-size: 12px; font-weight: 500; color: var(--color-gray); text-transform: uppercase; letter-spacing: 0.5px; }
+.detail-value { font-size: 14px; color: var(--color-text, #0F172A); }
+
+.doc-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+
+.doc-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
+  background: #EFF6FF; color: #3B82F6; text-decoration: none;
+  &:hover { background: #DBEAFE; }
+}
+
+.docs-error {
+  color: #DC2626;
+}
+
+.server-error {
+  color: #DC2626; font-size: 13px;
+  background: #FEF2F2; border: 1px solid #FECACA;
+  border-radius: 8px; padding: 8px 12px; margin-top: 16px;
+}
+
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+.btn-primary {
+  padding: 10px 24px; border-radius: 10px; border: none;
+  background: var(--gradient-primary); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+  &:disabled { opacity: 0.6; cursor: default; }
+}
 
 .btn-secondary {
   padding: 10px 24px; border-radius: 10px; border: 1px solid #E2E8F0;
@@ -79,21 +209,15 @@
   &:hover { background: #F8FAFC; }
 }
 
-/* ── Detail Grid ── */
-.detail-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+.btn-danger {
+  padding: 10px 24px; border-radius: 10px; border: none;
+  background: #EF4444; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+  &:hover { background: #DC2626; }
+  &:disabled { opacity: 0.6; cursor: default; }
 }
-
-.detail-item {
-  display: flex; flex-direction: column; gap: 4px;
-
-  &.full { grid-column: 1 / -1; }
-}
-
-.detail-label { font-size: 12px; font-weight: 500; color: var(--color-gray); text-transform: uppercase; letter-spacing: 0.5px; }
-.detail-value { font-size: 14px; color: var(--color-text, #0F172A); }
 
 @media (max-width: 768px) {
   .modal { margin: 0 16px; }
   .detail-grid { grid-template-columns: 1fr; }
+  .inst-grid { grid-template-columns: 1fr; }
 }

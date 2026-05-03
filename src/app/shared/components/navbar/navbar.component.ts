@@ -36,8 +36,8 @@ export class NavbarComponent {
       base.push({ label: 'Manage Your Donations', route: '/for-donor' });
     } else if (u.role === 'institution') {
       base.push({ label: 'Manage Donations', route: '/for-institution' });
-    } else if (u.role === 'superadmin') {
-      base.push({ label: 'Manage Platform', route: '/admin' });
+    } else if (u.role === 'admin' || u.role === 'superadmin') {
+      base.push({ label: 'Manage Donations', route: '/for-admin' });
     }
     base.push({ label: 'About', route: '/about' });
     return base;

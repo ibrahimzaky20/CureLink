@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   private readonly auth  = inject(AuthServiceService);
 
   userName = signal(this.auth.currentUser()?.firstName ?? 'Admin');
+  isSuperadmin = this.auth.currentUser()?.role === 'superadmin';
 
   stats = signal({
     totalDonations: 0,
@@ -55,6 +56,14 @@ export class DashboardComponent implements OnInit {
       error: () => {}
     });
 
+    this.admin.getExpiringDonations(30).subscribe({
+      next: res => {
+        this.expiringDonations.set(res?.data?.donations?.slice(0, 5) ?? []);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false)
+    });
+
     this.admin.getInstitutions().subscribe({
       next: res => {
         const institutions = res?.data?.institutions ?? [];
@@ -72,28 +81,22 @@ export class DashboardComponent implements OnInit {
       error: () => {}
     });
 
-    this.admin.getExpiringDonations(30).subscribe({
-      next: res => {
-        this.expiringDonations.set(res?.data?.donations?.slice(0, 5) ?? []);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false)
-    });
+    if (this.isSuperadmin) {
+      this.admin.getRecentActivity().subscribe({
+        next: res => this.recentActivity.set(res?.data?.slice(0, 8) ?? []),
+        error: () => {}
+      });
 
-    this.admin.getRecentActivity().subscribe({
-      next: res => this.recentActivity.set(res?.data?.slice(0, 8) ?? []),
-      error: () => {}
-    });
+      this.admin.getSystemSummary().subscribe({
+        next: res => this.systemSummary.set(res?.data ?? null),
+        error: () => {}
+      });
 
-    this.admin.getSystemSummary().subscribe({
-      next: res => this.systemSummary.set(res?.data ?? null),
-      error: () => {}
-    });
-
-    this.admin.getAlerts().subscribe({
-      next: res => this.alerts.set(res?.data ?? []),
-      error: () => {}
-    });
+      this.admin.getAlerts().subscribe({
+        next: res => this.alerts.set(res?.data ?? []),
+        error: () => {}
+      });
+    }
   }
 
   getAlertClass(level: string): string {

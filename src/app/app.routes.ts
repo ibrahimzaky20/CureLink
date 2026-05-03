@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { donorGuard, institutionGuard, superadminGuard } from './core/guards/auth.guard';
+import { donorGuard, institutionGuard, superadminGuard, superadminOnlyGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -91,7 +91,7 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'admin',
+    path: 'for-admin',
     canActivate: [superadminGuard],
     loadComponent: () => import('./pages/for-admin/for-admin.component').then(m => m.ForAdminComponent),
     children: [
@@ -109,27 +109,22 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/for-admin/pages/donations/donations.component').then(m => m.DonationsComponent)
       },
       {
-        path: 'pending-donations',
-        loadComponent: () => import('./pages/for-admin/pages/pending-donations/pending-donations.component').then(m => m.PendingDonationsComponent)
-      },
-      {
         path: 'institutions',
         loadComponent: () => import('./pages/for-admin/pages/institutions/institutions.component').then(m => m.InstitutionsComponent)
       },
       {
-        path: 'pending-institutions',
-        loadComponent: () => import('./pages/for-admin/pages/pending-institutions/pending-institutions.component').then(m => m.PendingInstitutionsComponent)
-      },
-      {
         path: 'user-management',
+        canActivate: [superadminOnlyGuard],
         loadComponent: () => import('./pages/for-admin/pages/user-management/user-management.component').then(m => m.UserManagementComponent)
       },
       {
         path: 'reports',
+        canActivate: [superadminOnlyGuard],
         loadComponent: () => import('./pages/for-admin/pages/reports/reports.component').then(m => m.ReportsComponent)
       },
       {
         path: 'analytics',
+        canActivate: [superadminOnlyGuard],
         loadComponent: () => import('./pages/for-admin/pages/analytics/analytics.component').then(m => m.AnalyticsComponent)
       }
     ]

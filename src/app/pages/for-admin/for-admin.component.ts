@@ -18,6 +18,7 @@ export class ForAdminComponent {
   });
 
   userName = computed(() => this.auth.currentUser()?.firstName ?? 'Admin');
+  isSuperadmin = computed(() => this.auth.currentUser()?.role === 'superadmin');
 
   mobileOpen = signal(false);
   toggleMobile() { this.mobileOpen.update(v => !v); }

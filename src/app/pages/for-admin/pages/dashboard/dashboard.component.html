@@ -113,7 +113,7 @@
         </svg>
         Pending Institutions
       </h2>
-      <a class="view-all" routerLink="../pending-institutions">View All</a>
+      <a class="view-all" routerLink="../institutions">View All</a>
     </div>
     @if (pendingInstitutions().length === 0) {
       <p class="empty-msg">No pending institutions.</p>
@@ -141,8 +141,8 @@
 
 </div>
 
-<!-- System Summary -->
-@if (systemSummary()) {
+<!-- System Summary (superadmin only) -->
+@if (isSuperadmin && systemSummary()) {
   <div class="summary-grid">
     <div class="summary-card">
       <div class="summary-icon blue">
@@ -199,7 +199,8 @@
   </div>
 }
 
-<!-- Bottom Grid: Recent Activity + Alerts -->
+<!-- Bottom Grid: Recent Activity + Alerts (superadmin only) -->
+@if (isSuperadmin) {
 <div class="bottom-grid">
 
   <!-- Recent Activity -->
@@ -310,6 +311,7 @@
   </div>
 
 </div>
+}
 
 <!-- Expiring Donations -->
 @if (expiringDonations().length > 0) {

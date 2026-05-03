@@ -1,8 +1,8 @@
 <!-- Page Header -->
 <div class="page-header">
   <div>
-    <h1 class="page-title">All Donations</h1>
-    <p class="page-subtitle">Manage and monitor all donations on the platform.</p>
+    <h1 class="page-title">Manage Donations</h1>
+    <p class="page-subtitle">Review, approve, and manage all donations on the platform.</p>
   </div>
   <button class="btn-export" (click)="exportCSV()">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -15,22 +15,49 @@
   </button>
 </div>
 
-<!-- Filters -->
-<div class="filters-bar">
-  <button class="filter-chip" [class.active]="statusFilter() === ''" (click)="onFilterChange('')">All</button>
-  <button class="filter-chip" [class.active]="statusFilter() === 'pending'" (click)="onFilterChange('pending')">Pending</button>
-  <button class="filter-chip" [class.active]="statusFilter() === 'admin_review'" (click)="onFilterChange('admin_review')">Admin Review</button>
-  <button class="filter-chip" [class.active]="statusFilter() === 'available'" (click)="onFilterChange('available')">Available</button>
-  <button class="filter-chip" [class.active]="statusFilter() === 'delivered'" (click)="onFilterChange('delivered')">Delivered</button>
-  <button class="filter-chip" [class.active]="statusFilter() === 'rejected'" (click)="onFilterChange('rejected')">Rejected</button>
-  <button class="filter-chip" [class.active]="statusFilter() === 'expired'" (click)="onFilterChange('expired')">Expired</button>
+<!-- Tabs -->
+<div class="tabs-bar">
+  <button class="tab-btn" [class.active]="activeTab() === 'all'" (click)="switchTab('all')">
+    All Donations
+  </button>
+  <button class="tab-btn" [class.active]="activeTab() === 'pending'" (click)="switchTab('pending')">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+    </svg>
+    Pending Review
+  </button>
 </div>
+
+<!-- Status Filters (only for All tab) -->
+@if (activeTab() === 'all') {
+  <div class="filters-bar">
+    <button class="filter-chip" [class.active]="statusFilter() === ''" (click)="onFilterChange('')">All</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'pending'" (click)="onFilterChange('pending')">Pending</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'admin_review'" (click)="onFilterChange('admin_review')">Admin Review</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'available'" (click)="onFilterChange('available')">Available</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'delivered'" (click)="onFilterChange('delivered')">Delivered</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'rejected'" (click)="onFilterChange('rejected')">Rejected</button>
+    <button class="filter-chip" [class.active]="statusFilter() === 'expired'" (click)="onFilterChange('expired')">Expired</button>
+  </div>
+}
 
 <!-- Table -->
 <div class="card">
   @if (loading()) {
   } @else if (donations().length === 0) {
-    <p class="empty-msg">No donations found.</p>
+    @if (activeTab() === 'pending') {
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+          stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+        <p class="empty-title">All caught up!</p>
+        <p class="empty-subtitle">No donations pending review at the moment.</p>
+      </div>
+    } @else {
+      <p class="empty-msg">No donations found.</p>
+    }
   } @else {
     <div class="table-wrap">
       <table class="data-table">
@@ -39,7 +66,11 @@
             <th>Medicine</th>
             <th>Donor</th>
             <th>Quantity</th>
-            <th>Status</th>
+            @if (activeTab() === 'pending') {
+              <th>Condition</th>
+            } @else {
+              <th>Status</th>
+            }
             <th>Date</th>
             <th>Actions</th>
           </tr>
@@ -50,25 +81,45 @@
               <td class="primary-col">{{ d.medicine?.name ?? d.medicineName ?? 'N/A' }}</td>
               <td>{{ d.donor?.firstName ?? 'Unknown' }} {{ d.donor?.lastName ?? '' }}</td>
               <td>{{ d.quantity?.amount ?? d.quantityAmount ?? '-' }} {{ d.quantity?.unit ?? d.quantityUnit ?? '' }}</td>
-              <td>
-                <span class="status-badge" [ngClass]="getStatusClass(d.status)">{{ d.status }}</span>
-              </td>
+              @if (activeTab() === 'pending') {
+                <td class="notes-col">{{ d.conditionNotes ?? '-' }}</td>
+              } @else {
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(d.status)">{{ d.status }}</span>
+                </td>
+              }
               <td class="date-col">{{ d.createdAt?.split('T')[0] ?? '-' }}</td>
               <td class="actions-col">
-                <button class="action-btn edit" title="Change Status" (click)="openStatusModal(d)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
-                </button>
-                <button class="action-btn delete" title="Delete" (click)="openDeleteModal(d)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                  </svg>
-                </button>
+                @if (activeTab() === 'pending') {
+                  <button class="action-btn approve" title="Approve" (click)="openReviewModal(d, 'approve')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </button>
+                  <button class="action-btn reject" title="Reject" (click)="openReviewModal(d, 'reject')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                } @else {
+                  <button class="action-btn edit" title="Change Status" (click)="openStatusModal(d)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                  </button>
+                  <button class="action-btn delete" title="Delete" (click)="openDeleteModal(d)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                  </button>
+                }
               </td>
             </tr>
           }
@@ -86,6 +137,39 @@
     }
   }
 </div>
+
+<!-- Approve / Reject Modal -->
+@if (showReviewModal()) {
+  <div class="modal-overlay" (click)="closeReviewModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">{{ reviewAction() === 'approve' ? 'Approve' : 'Reject' }} Donation</h3>
+      <p class="modal-subtitle">{{ selectedDonation()?.medicine?.name ?? 'This donation' }}</p>
+
+      <label class="modal-label">{{ reviewAction() === 'reject' ? 'Reason (required)' : 'Notes (optional)' }}</label>
+      <textarea class="modal-textarea" rows="3"
+        [ngModel]="reviewNotes()" (ngModelChange)="reviewNotes.set($event)"
+        [placeholder]="reviewAction() === 'reject' ? 'Provide a reason for rejection...' : 'Add a note...'">
+      </textarea>
+
+      @if (actionError()) {
+        <p class="server-error">{{ actionError() }}</p>
+      }
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeReviewModal()">Cancel</button>
+        @if (reviewAction() === 'approve') {
+          <button class="btn-primary" (click)="confirmReview()" [disabled]="actionLoading()">
+            {{ actionLoading() ? 'Approving...' : 'Approve' }}
+          </button>
+        } @else {
+          <button class="btn-danger" (click)="confirmReview()" [disabled]="actionLoading() || !reviewNotes()">
+            {{ actionLoading() ? 'Rejecting...' : 'Reject' }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}
 
 <!-- Change Status Modal -->
 @if (showStatusModal()) {
@@ -107,6 +191,10 @@
       <label class="modal-label">Notes (optional)</label>
       <textarea class="modal-textarea" rows="3" [ngModel]="statusNotes()" (ngModelChange)="statusNotes.set($event)" placeholder="Add a note..."></textarea>
 
+      @if (actionError()) {
+        <p class="server-error">{{ actionError() }}</p>
+      }
+
       <div class="modal-actions">
         <button class="btn-secondary" (click)="closeStatusModal()">Cancel</button>
         <button class="btn-primary" (click)="changeStatus()" [disabled]="actionLoading()">
@@ -123,6 +211,10 @@
     <div class="modal" (click)="$event.stopPropagation()">
       <h3 class="modal-title">Delete Donation</h3>
       <p class="modal-subtitle">Are you sure you want to permanently delete this donation? This action cannot be undone.</p>
+
+      @if (actionError()) {
+        <p class="server-error">{{ actionError() }}</p>
+      }
 
       <div class="modal-actions">
         <button class="btn-secondary" (click)="closeDeleteModal()">Cancel</button>

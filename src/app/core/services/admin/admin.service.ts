@@ -217,4 +217,8 @@ export class AdminService {
   rejectInstitution(id: string): Observable<any> {
     return this.http.patch<any>(`${this.api}/api/v1/admin/institutions/${id}/reject`, {}, this.opts);
   }
+
+  getInstitutionDocuments(insId: string): Observable<any> {
+    return this.http.get<any>(`${this.api}/api/v1/admin/institutions/documents/${insId}`, this.opts);
+  }
 }

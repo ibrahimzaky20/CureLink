@@ -1,57 +1,119 @@
 <!-- Page Header -->
 <div class="page-header">
   <div>
-    <h1 class="page-title">All Institutions</h1>
-    <p class="page-subtitle">View and manage all registered institutions on the platform.</p>
+    <h1 class="page-title">Manage Institutions</h1>
+    <p class="page-subtitle">View, verify, and manage all registered institutions.</p>
   </div>
 </div>
 
-<!-- Table -->
+<!-- Tabs -->
+<div class="tabs-bar">
+  <button class="tab-btn" [class.active]="activeTab() === 'all'" (click)="switchTab('all')">
+    All Institutions
+  </button>
+  <button class="tab-btn" [class.active]="activeTab() === 'pending'" (click)="switchTab('pending')">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+    </svg>
+    Pending Verification
+  </button>
+</div>
+
+<!-- Content -->
 <div class="card">
   @if (loading()) {
   } @else if (institutions().length === 0) {
-    <p class="empty-msg">No institutions found.</p>
+    @if (activeTab() === 'pending') {
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+          stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+        <p class="empty-title">All caught up!</p>
+        <p class="empty-subtitle">No institutions pending verification.</p>
+      </div>
+    } @else {
+      <p class="empty-msg">No institutions found.</p>
+    }
   } @else {
-    <div class="table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>License No.</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (inst of institutions(); track inst._id) {
-            <tr>
-              <td class="primary-col">{{ inst.name }}</td>
-              <td>{{ inst.type ?? '-' }}</td>
-              <td>{{ inst.licenseNumber ?? '-' }}</td>
-              <td>
-                <span class="status-badge" [ngClass]="getVerifiedClass(inst)">
-                  {{ inst.isVerified ? 'Verified' : 'Unverified' }}
-                </span>
-              </td>
-              <td>
-                <button class="action-btn view" title="View Details" (click)="viewDetails(inst)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
+    <!-- Pending: card grid -->
+    @if (activeTab() === 'pending') {
+      <div class="inst-grid">
+        @for (inst of institutions(); track inst._id) {
+          <div class="inst-card" (click)="viewDetails(inst)">
+            <div class="inst-card-header">
+              <div class="inst-avatar">
+                @if (inst.logo) {
+                  <img [src]="inst.logo" [alt]="inst.name" />
+                } @else {
+                  <span>{{ inst.name?.charAt(0)?.toUpperCase() ?? '?' }}</span>
+                }
+              </div>
+              <div class="inst-info">
+                <span class="inst-name">{{ inst.name }}</span>
+                <span class="inst-type">{{ inst.type ?? 'Institution' }}</span>
+              </div>
+            </div>
+            <div class="inst-meta">
+              @if (inst.licenseNumber) {
+                <span class="meta-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
                   </svg>
-                </button>
-              </td>
+                  {{ inst.licenseNumber }}
+                </span>
+              }
+            </div>
+            <button class="review-btn">Review Application</button>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- All: table -->
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>License No.</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            @for (inst of institutions(); track inst._id) {
+              <tr>
+                <td class="primary-col">{{ inst.name }}</td>
+                <td>{{ inst.type ?? '-' }}</td>
+                <td>{{ inst.licenseNumber ?? '-' }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getVerifiedClass(inst)">
+                    {{ inst.isVerified ? 'Verified' : 'Unverified' }}
+                  </span>
+                </td>
+                <td>
+                  <button class="action-btn view" title="View Details" (click)="viewDetails(inst)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   }
 </div>
 
-<!-- Detail Modal -->
+<!-- Detail / Review Modal -->
 @if (showDetail()) {
   <div class="modal-overlay" (click)="closeDetail()">
     <div class="modal modal-lg" (click)="$event.stopPropagation()">
@@ -59,7 +121,7 @@
       } @else if (selectedInst()) {
         <h3 class="modal-title">{{ selectedInst().name }}</h3>
         <span class="status-badge" [ngClass]="getVerifiedClass(selectedInst())" style="margin-bottom: 16px; display: inline-block;">
-          {{ selectedInst().isVerified ? 'Verified' : 'Unverified' }}
+          {{ selectedInst().isVerified ? 'Verified' : activeTab() === 'pending' ? 'Pending Verification' : 'Unverified' }}
         </span>
 
         <div class="detail-grid">
@@ -83,10 +145,45 @@
               }
             </div>
           }
+          <div class="detail-item full">
+            <span class="detail-label">Documents</span>
+            @if (docsLoading()) {
+              <span class="detail-value">Loading documents...</span>
+            } @else if (docsError()) {
+              <span class="detail-value docs-error">{{ docsError() }}</span>
+            } @else if (instDocuments().length) {
+              <div class="doc-list">
+                @for (doc of instDocuments(); track $index) {
+                  <a class="doc-link" [href]="doc.file" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    {{ doc.type ?? 'Document ' + ($index + 1) }}
+                  </a>
+                }
+              </div>
+            } @else {
+              <span class="detail-value">No documents uploaded.</span>
+            }
+          </div>
         </div>
 
+        @if (actionError()) {
+          <p class="server-error">{{ actionError() }}</p>
+        }
+
         <div class="modal-actions">
-          <button class="btn-secondary" (click)="closeDetail()">Close</button>
+          <button class="btn-secondary" (click)="closeDetail()">{{ activeTab() === 'pending' ? 'Cancel' : 'Close' }}</button>
+          @if (activeTab() === 'pending') {
+            <button class="btn-danger" (click)="reject()" [disabled]="actionLoading()">
+              {{ actionLoading() ? 'Processing...' : 'Reject' }}
+            </button>
+            <button class="btn-primary" (click)="verify()" [disabled]="actionLoading()">
+              {{ actionLoading() ? 'Processing...' : 'Verify' }}
+            </button>
+          }
         </div>
       }
     </div>
