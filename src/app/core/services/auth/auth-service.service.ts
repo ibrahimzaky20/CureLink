@@ -105,6 +105,8 @@ export class AuthServiceService {
   register(payload: RegisterPayload): Observable<any> {
     return this.http.post<any>(`${this.api}/api/v1/auth/register`, payload, this.opts).pipe(
       tap(res => {
+        const token = res?.data?.accessToken;
+        if (token) this.saveToken(token);
         const user = res?.data?.user;
         if (user) this.saveUser(user);
       })
@@ -122,8 +124,8 @@ export class AuthServiceService {
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.api}/api/v1/auth/login`, { email, password }, this.opts).pipe(
       tap(res => {
-        // Tokens are set as HttpOnly cookies by the server.
-        // We save only the user object for local state.
+        const token = res?.data?.accessToken;
+        if (token) this.saveToken(token);
         const user = res?.data?.user;
         if (user) this.saveUser(user);
       })
@@ -137,7 +139,12 @@ export class AuthServiceService {
   }
 
   refreshToken(): Observable<any> {
-    return this.http.post<any>(`${this.api}/api/v1/auth/refresh-token`, {}, this.opts);
+    return this.http.post<any>(`${this.api}/api/v1/auth/refresh-token`, {}, this.opts).pipe(
+      tap(res => {
+        const token = res?.data?.accessToken;
+        if (token) this.saveToken(token);
+      })
+    );
   }
 
   me(): Observable<any> {
