@@ -5,7 +5,6 @@
     <p class="page-subtitle">View, verify, and manage all registered institutions.</p>
   </div>
 </div>
-
 <!-- Tabs -->
 <div class="tabs-bar">
   <button class="tab-btn" [class.active]="activeTab() === 'all'" (click)="switchTab('all')">
@@ -177,8 +176,8 @@
         <div class="modal-actions">
           <button class="btn-secondary" (click)="closeDetail()">{{ activeTab() === 'pending' ? 'Cancel' : 'Close' }}</button>
           @if (activeTab() === 'pending') {
-            <button class="btn-danger" (click)="reject()" [disabled]="actionLoading()">
-              {{ actionLoading() ? 'Processing...' : 'Reject' }}
+            <button class="btn-danger" (click)="openRejectModal()" [disabled]="actionLoading()">
+              Reject
             </button>
             <button class="btn-primary" (click)="verify()" [disabled]="actionLoading()">
               {{ actionLoading() ? 'Processing...' : 'Verify' }}
@@ -186,6 +185,34 @@
           }
         </div>
       }
+    </div>
+  </div>
+}
+
+<!-- Reject Reason Modal -->
+@if (showRejectModal()) {
+  <div class="modal-overlay" (click)="closeRejectModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Reject Institution</h3>
+      <p style="font-size: 14px; color: var(--color-gray); margin-bottom: 16px;">
+        Please provide a reason for rejecting this institution.
+      </p>
+      <textarea
+        class="reject-textarea"
+        [ngModel]="rejectReason()"
+        (ngModelChange)="rejectReason.set($event)"
+        placeholder="Enter rejection reason..."
+        rows="4"
+      ></textarea>
+      @if (actionError()) {
+        <p class="server-error">{{ actionError() }}</p>
+      }
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeRejectModal()">Cancel</button>
+        <button class="btn-danger" (click)="confirmReject()" [disabled]="actionLoading() || !rejectReason()">
+          {{ actionLoading() ? 'Processing...' : 'Confirm Reject' }}
+        </button>
+      </div>
     </div>
   </div>
 }

@@ -1,10 +1,11 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../../core/services/admin/admin.service';
 
 @Component({
   selector: 'app-admin-institutions',
-  imports: [NgClass],
+  imports: [NgClass, FormsModule],
   templateUrl: './institutions.component.html',
   styleUrl: './institutions.component.scss'
 })
@@ -17,12 +18,15 @@ export class InstitutionsComponent implements OnInit {
 
   showDetail      = signal(false);
   selectedInst    = signal<any>(null);
+  selectedInstId  = signal('');
   instDocuments   = signal<any[]>([]);
   docsLoading     = signal(false);
   docsError       = signal('');
   detailLoading   = signal(false);
   actionLoading   = signal(false);
   actionError     = signal('');
+  showRejectModal = signal(false);
+  rejectReason    = signal('');
 
   ngOnInit() {
     this.load();
@@ -53,13 +57,13 @@ export class InstitutionsComponent implements OnInit {
     this.actionError.set('');
     this.instDocuments.set([]);
     this.showDetail.set(true);
+    this.selectedInstId.set(inst._id);
 
     this.admin.getInstitution(inst._id).subscribe({
       next: res => {
-        const full = res?.data?.institution ?? inst;
-        this.selectedInst.set(full);
+        this.selectedInst.set(res?.data?.institution ?? inst);
         this.detailLoading.set(false);
-        this.loadDocuments(full._id ?? inst._id);
+        this.loadDocuments(inst._id);
       },
       error: () => {
         this.selectedInst.set(inst);
@@ -87,15 +91,16 @@ export class InstitutionsComponent implements OnInit {
   closeDetail() {
     this.showDetail.set(false);
     this.selectedInst.set(null);
+    this.selectedInstId.set('');
     this.instDocuments.set([]);
   }
 
   verify() {
-    const inst = this.selectedInst();
-    if (!inst) return;
+    const id = this.selectedInstId();
+    if (!id) return;
     this.actionLoading.set(true);
     this.actionError.set('');
-    this.admin.verifyInstitution(inst._id).subscribe({
+    this.admin.verifyInstitution(id).subscribe({
       next: () => {
         this.actionLoading.set(false);
         this.closeDetail();
@@ -108,14 +113,25 @@ export class InstitutionsComponent implements OnInit {
     });
   }
 
-  reject() {
-    const inst = this.selectedInst();
-    if (!inst) return;
+  openRejectModal() {
+    this.rejectReason.set('');
+    this.actionError.set('');
+    this.showRejectModal.set(true);
+  }
+
+  closeRejectModal() {
+    this.showRejectModal.set(false);
+  }
+
+  confirmReject() {
+    const id = this.selectedInstId();
+    if (!id || !this.rejectReason()) return;
     this.actionLoading.set(true);
     this.actionError.set('');
-    this.admin.rejectInstitution(inst._id).subscribe({
+    this.admin.rejectInstitution(id, this.rejectReason()).subscribe({
       next: () => {
         this.actionLoading.set(false);
+        this.closeRejectModal();
         this.closeDetail();
         this.load();
       },

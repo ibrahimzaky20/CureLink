@@ -19,6 +19,9 @@ export class PendingInstitutionsComponent implements OnInit {
   selectedInst    = signal<any>(null);
   detailLoading   = signal(false);
   actionLoading   = signal(false);
+  showRejectModal = signal(false);
+  rejectReason    = signal('');
+  actionError     = signal('');
 
   ngOnInit() {
     this.loadPending();
@@ -69,17 +72,32 @@ export class PendingInstitutionsComponent implements OnInit {
     });
   }
 
-  reject() {
+  openRejectModal() {
+    this.rejectReason.set('');
+    this.actionError.set('');
+    this.showRejectModal.set(true);
+  }
+
+  closeRejectModal() {
+    this.showRejectModal.set(false);
+  }
+
+  confirmReject() {
     const inst = this.selectedInst();
-    if (!inst) return;
+    if (!inst || !this.rejectReason()) return;
     this.actionLoading.set(true);
-    this.admin.rejectInstitution(inst._id).subscribe({
+    this.actionError.set('');
+    this.admin.rejectInstitution(inst._id, this.rejectReason()).subscribe({
       next: () => {
         this.actionLoading.set(false);
+        this.closeRejectModal();
         this.closeModal();
         this.loadPending();
       },
-      error: () => this.actionLoading.set(false)
+      error: err => {
+        this.actionLoading.set(false);
+        this.actionError.set(err?.error?.message ?? 'Failed to reject institution.');
+      }
     });
   }
 }

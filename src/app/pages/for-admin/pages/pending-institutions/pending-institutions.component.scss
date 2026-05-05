@@ -157,6 +157,19 @@
   &:disabled { opacity: 0.6; cursor: default; }
 }
 
+.reject-textarea {
+  width: 100%; padding: 12px; border-radius: 10px;
+  border: 1px solid #E2E8F0; font-size: 14px; font-family: inherit;
+  resize: vertical; outline: none; transition: border-color 0.15s;
+  &:focus { border-color: var(--color-primary-dark); }
+}
+
+.server-error {
+  color: #DC2626; font-size: 13px;
+  background: #FEF2F2; border: 1px solid #FECACA;
+  border-radius: 8px; padding: 8px 12px; margin-top: 16px;
+}
+
 @media (max-width: 768px) {
   .modal { margin: 0 16px; }
   .detail-grid { grid-template-columns: 1fr; }
