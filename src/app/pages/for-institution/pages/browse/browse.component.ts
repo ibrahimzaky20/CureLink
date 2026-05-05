@@ -17,8 +17,9 @@ export class BrowseComponent implements OnInit {
   readonly donations   = signal<Donation[]>([]);
   readonly errorMsg    = signal('');
 
-  readonly selected   = signal<Donation | null>(null);
-  readonly detailError   = signal('');
+  readonly selected       = signal<Donation | null>(null);
+  readonly detailError    = signal('');
+  readonly activeImgIndex = signal(0);
 
   readonly filtered = computed(() => {
     const q = this.searchQuery().toLowerCase().trim();
@@ -48,15 +49,8 @@ export class BrowseComponent implements OnInit {
 
   openDetails(d: Donation): void {
     this.selected.set(d);
+    this.activeImgIndex.set(0);
     this.detailError.set('');
-    this.donationsApi.getById(d._id).subscribe({
-      next: (res) => {
-        this.selected.set(res?.data ?? d);
-      },
-      error: (err) => {
-        this.detailError.set(err?.message ?? 'Failed to load donation details.');
-      }
-    });
   }
 
   closeDetails(): void {

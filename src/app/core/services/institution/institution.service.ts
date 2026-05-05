@@ -46,6 +46,24 @@ export class InstitutionService {
     );
   }
 
+  getDocuments(): Observable<any> {
+    return this.http.get<any>(
+      `${this.api}/api/v1/institutions/documents`,
+      this.opts
+    );
+  }
+
+  uploadDocuments(taxCard: File | null, licenseNumber: File | null): Observable<any> {
+    const form = new FormData();
+    if (taxCard) form.append('tax_card', taxCard);
+    if (licenseNumber) form.append('licenseNumber', licenseNumber);
+    return this.http.post<any>(
+      `${this.api}/api/v1/institutions/documents`,
+      form,
+      this.opts
+    );
+  }
+
   updateProfile(payload: {
     institutionName?: string;
     address?: string;

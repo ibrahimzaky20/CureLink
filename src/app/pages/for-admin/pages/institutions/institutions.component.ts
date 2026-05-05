@@ -56,9 +56,10 @@ export class InstitutionsComponent implements OnInit {
 
     this.admin.getInstitution(inst._id).subscribe({
       next: res => {
-        this.selectedInst.set(res?.data?.institution ?? inst);
+        const full = res?.data?.institution ?? inst;
+        this.selectedInst.set(full);
         this.detailLoading.set(false);
-        this.loadDocuments(inst._id);
+        this.loadDocuments(full._id ?? inst._id);
       },
       error: () => {
         this.selectedInst.set(inst);
@@ -125,7 +126,17 @@ export class InstitutionsComponent implements OnInit {
     });
   }
 
-  getVerifiedClass(inst: any): string {
-    return inst.isVerified ? 'verified' : 'unverified';
+  getStatusClass(inst: any): string {
+    const s = inst.verificationStatus;
+    if (s === 'verified') return 'verified';
+    if (s === 'rejected') return 'rejected';
+    return 'pending';
+  }
+
+  getStatusLabel(inst: any): string {
+    const s = inst.verificationStatus;
+    if (s === 'verified') return 'Verified';
+    if (s === 'rejected') return 'Rejected';
+    return 'Pending';
   }
 }

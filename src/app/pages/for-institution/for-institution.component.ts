@@ -13,6 +13,10 @@ export class ForInstitutionComponent {
   private readonly router = inject(Router);
 
   mobileOpen = signal(false);
+
+  get isVerified(): boolean {
+    return this.auth.currentUser()?.institution?.verificationStatus === 'verified';
+  }
   toggleMobile() { this.mobileOpen.update(v => !v); }
   closeMobile()  { this.mobileOpen.set(false); }
 

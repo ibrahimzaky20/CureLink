@@ -93,6 +93,14 @@
   .verified-desc  { color: #78350f; }
 }
 
+.verified-banner.rejected {
+  background: #fef2f2;
+  border-color: #fca5a5;
+
+  .verified-title { color: #991b1b; }
+  .verified-desc  { color: #b91c1c; }
+}
+
 .docs-empty {
   font-size: 13px;
   color: #94a3b8;
@@ -361,6 +369,67 @@
   font-size: 14px;
   font-weight: 500;
   color: #334155;
+}
+
+.doc-view {
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0d9488;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+.docs-warning {
+  font-size: 13px;
+  color: #92400e;
+  background: #fffbeb;
+  border-left: 3px solid #fbbf24;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+.doc-upload-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.doc-upload-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.doc-upload-label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.btn-upload-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #2BCEB8 12%, #39A0EA 85%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0 20px;
+  height: 44px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+
+  &:hover { opacity: 0.88; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
 /* ── Upload Button ── */

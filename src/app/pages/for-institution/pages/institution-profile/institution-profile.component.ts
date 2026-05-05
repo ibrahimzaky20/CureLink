@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TitleCasePipe } from '@angular/common';
 import { InstitutionService, InstitutionProfile } from '../../../../core/services/institution/institution.service';
 import { AuthServiceService } from '../../../../core/services/auth/auth-service.service';
 
 @Component({
   selector: 'app-institution-profile',
-  imports: [FormsModule],
+  imports: [FormsModule, TitleCasePipe],
   templateUrl: './institution-profile.component.html',
   styleUrl: './institution-profile.component.scss'
 })
@@ -18,6 +19,13 @@ export class InstitutionProfileComponent implements OnInit {
   readonly successMsg = signal('');
 
   readonly profile = signal<InstitutionProfile | null>(null);
+  readonly documents = signal<Array<{ _id: string; file: string; type: string; createdAt: string }>>([]);
+  readonly allDocsUploaded = signal(false);
+  readonly taxCardFile      = signal<File | null>(null);
+  readonly licenseFile      = signal<File | null>(null);
+  readonly uploading        = signal(false);
+  readonly uploadError      = signal('');
+  readonly uploadSuccess    = signal('');
 
   // Editable fields
   readonly institutionName = signal('');
@@ -26,14 +34,23 @@ export class InstitutionProfileComponent implements OnInit {
   readonly logoFile        = signal<File | null>(null);
   readonly logoPreview     = signal<string>('');
 
-  readonly isVerified  = computed(() => true);
-  readonly statusLabel = computed(() => 'Verified');
+  readonly verificationStatus = computed(() => {
+    return this.profile()?.verificationStatus ?? this.auth.currentUser()?.institution?.verificationStatus ?? 'pending';
+  });
+  readonly isVerified  = computed(() => this.verificationStatus() === 'verified');
+  readonly statusLabel = computed(() => {
+    const s = this.verificationStatus();
+    if (s === 'verified') return 'Verified';
+    if (s === 'rejected') return 'Rejected';
+    return 'Pending Verification';
+  });
 
   readonly licenseNumber = computed(() => this.profile()?.licenseNumber || '');
   readonly type          = computed(() => this.profile()?.type || '');
 
   ngOnInit(): void {
     this.fetchProfile();
+    this.fetchDocuments();
   }
 
   fetchProfile(): void {
@@ -51,6 +68,16 @@ export class InstitutionProfileComponent implements OnInit {
       error: (err) => {
         this.errorMsg.set(err?.message ?? 'Failed to load profile.');
       }
+    });
+  }
+
+  fetchDocuments(): void {
+    this.api.getDocuments().subscribe({
+      next: (res: any) => {
+        this.documents.set(res?.data?.institutionDocs ?? []);
+        this.allDocsUploaded.set(res?.data?.allIsUploaded ?? false);
+      },
+      error: () => {}
     });
   }
 
@@ -90,6 +117,44 @@ export class InstitutionProfileComponent implements OnInit {
       error: (err) => {
         this.errorMsg.set(err?.message ?? 'Failed to update profile.');
         this.saving.set(false);
+      }
+    });
+  }
+
+  onTaxCardSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.taxCardFile.set(input.files?.[0] ?? null);
+    this.uploadError.set('');
+    this.uploadSuccess.set('');
+  }
+
+  onLicenseSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.licenseFile.set(input.files?.[0] ?? null);
+    this.uploadError.set('');
+    this.uploadSuccess.set('');
+  }
+
+  uploadDocuments(): void {
+    const taxCard = this.taxCardFile();
+    const license = this.licenseFile();
+    if (!taxCard && !license) return;
+
+    this.uploading.set(true);
+    this.uploadError.set('');
+    this.uploadSuccess.set('');
+
+    this.api.uploadDocuments(taxCard, license).subscribe({
+      next: (res) => {
+        this.uploading.set(false);
+        this.uploadSuccess.set(res?.message || 'Documents uploaded successfully.');
+        this.taxCardFile.set(null);
+        this.licenseFile.set(null);
+        this.fetchDocuments();
+      },
+      error: (err) => {
+        this.uploading.set(false);
+        this.uploadError.set(err?.error?.message ?? 'Failed to upload documents.');
       }
     });
   }

@@ -134,8 +134,12 @@
     border: 1px solid var(--color-primary-border);
   }
 
-  &.unverified {
+  &.pending {
     color: #92400E; background: #FFFBEB; border: 1px solid #FDE68A;
+  }
+
+  &.rejected {
+    color: #991B1B; background: #FEF2F2; border: 1px solid #FECACA;
   }
 }
 

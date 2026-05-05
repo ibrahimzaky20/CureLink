@@ -1,6 +1,6 @@
 import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
 import { AuthServiceService } from '../services/auth/auth-service.service';
 import { Router } from '@angular/router';
 
@@ -13,6 +13,7 @@ const PUBLIC_PATHS = [
 ];
 
 let isRefreshing = false;
+const refreshToken$ = new BehaviorSubject<string | null>(null);
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
@@ -32,26 +33,42 @@ export const authInterceptor: HttpInterceptorFn = (
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !isRefreshing && !isPublic) {
-        isRefreshing = true;
-        return auth.refreshToken().pipe(
-          switchMap(() => {
-            isRefreshing = false;
-            const newToken = auth.getToken();
-            const retryReq = newToken
-              ? req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } })
-              : req;
+      if (error.status !== 401 || isPublic) {
+        return throwError(() => error);
+      }
+
+      if (isRefreshing) {
+        return refreshToken$.pipe(
+          filter(token => token !== null),
+          take(1),
+          switchMap(token => {
+            const retryReq = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
             return next(retryReq);
-          }),
-          catchError(refreshErr => {
-            isRefreshing = false;
-            auth.clearUser();
-            router.navigate(['/auth/login']);
-            return throwError(() => refreshErr);
           })
         );
       }
-      return throwError(() => error);
+
+      isRefreshing = true;
+      refreshToken$.next(null);
+
+      return auth.refreshToken().pipe(
+        switchMap(() => {
+          isRefreshing = false;
+          const newToken = auth.getToken();
+          refreshToken$.next(newToken);
+          const retryReq = newToken
+            ? req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } })
+            : req;
+          return next(retryReq);
+        }),
+        catchError(refreshErr => {
+          isRefreshing = false;
+          refreshToken$.next('');
+          auth.clearUser();
+          router.navigate(['/auth/login']);
+          return throwError(() => refreshErr);
+        })
+      );
     })
   );
 };

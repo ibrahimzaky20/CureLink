@@ -90,6 +90,13 @@
               }
               <td class="date-col">{{ d.createdAt?.split('T')[0] ?? '-' }}</td>
               <td class="actions-col">
+                <button class="action-btn view" title="View Details" (click)="viewDetails(d)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
                 @if (activeTab() === 'pending') {
                   <button class="action-btn approve" title="Approve" (click)="openReviewModal(d, 'approve')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
@@ -222,6 +229,75 @@
           {{ actionLoading() ? 'Deleting...' : 'Delete' }}
         </button>
       </div>
+    </div>
+  </div>
+}
+
+<!-- Donation Detail Modal -->
+@if (showDetailModal()) {
+  <div class="modal-overlay" (click)="closeDetailModal()">
+    <div class="modal modal-lg" (click)="$event.stopPropagation()">
+      @if (detailDonation()) {
+        <h3 class="modal-title">{{ detailDonation().medicine?.name ?? 'Donation Details' }}</h3>
+        <span class="status-badge" [ngClass]="getStatusClass(detailDonation().status)" style="margin-bottom: 16px; display: inline-block;">
+          {{ detailDonation().status }}
+        </span>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Medicine</span>
+            <span class="detail-value">{{ detailDonation().medicine?.name ?? '-' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Strength</span>
+            <span class="detail-value">{{ detailDonation().medicine?.strength ?? '-' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Dosage Form</span>
+            <span class="detail-value">{{ detailDonation().medicine?.dosageForm ?? '-' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Batch Number</span>
+            <span class="detail-value">{{ detailDonation().batchNumber ?? '-' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Quantity</span>
+            <span class="detail-value">{{ detailDonation().quantity?.amount ?? '-' }} {{ detailDonation().quantity?.unit ?? '' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Expiry Date</span>
+            <span class="detail-value">{{ detailDonation().expiryDate?.split('T')[0] ?? '-' }}</span>
+          </div>
+          @if (detailDonation().conditionNotes) {
+            <div class="detail-item full">
+              <span class="detail-label">Condition Notes</span>
+              <span class="detail-value">{{ detailDonation().conditionNotes }}</span>
+            </div>
+          }
+
+          @if (detailDonation().images?.length) {
+            <div class="detail-item full">
+              <span class="detail-label">Images</span>
+              <div class="donation-hero">
+                <img [src]="detailDonation().images[activeImgIndex()].url" [alt]="detailDonation().images[activeImgIndex()].caption ?? 'Donation image'" />
+              </div>
+              @if (detailDonation().images.length > 1) {
+                <div class="donation-images">
+                  @for (img of detailDonation().images; track img._id; let i = $index) {
+                    <button class="donation-img-wrap" [class.active]="i === activeImgIndex()" (click)="activeImgIndex.set(i)">
+                      <img [src]="img.url" [alt]="img.caption ?? 'Donation image'" />
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeDetailModal()">Close</button>
+        </div>
+      }
     </div>
   </div>
 }

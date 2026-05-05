@@ -23,7 +23,7 @@ export interface Donation {
   createdAt: string;
   batchNumber?: string;
   conditionNotes?: string;
-  images?: string[];
+  images?: Array<{ _id: string; url: string; caption?: string }>;
 }
 
 export interface Pagination {

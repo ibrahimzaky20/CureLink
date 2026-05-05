@@ -91,8 +91,8 @@
                 <td>{{ inst.type ?? '-' }}</td>
                 <td>{{ inst.licenseNumber ?? '-' }}</td>
                 <td>
-                  <span class="status-badge" [ngClass]="getVerifiedClass(inst)">
-                    {{ inst.isVerified ? 'Verified' : 'Unverified' }}
+                  <span class="status-badge" [ngClass]="getStatusClass(inst)">
+                    {{ getStatusLabel(inst) }}
                   </span>
                 </td>
                 <td>
@@ -120,8 +120,8 @@
       @if (detailLoading()) {
       } @else if (selectedInst()) {
         <h3 class="modal-title">{{ selectedInst().name }}</h3>
-        <span class="status-badge" [ngClass]="getVerifiedClass(selectedInst())" style="margin-bottom: 16px; display: inline-block;">
-          {{ selectedInst().isVerified ? 'Verified' : activeTab() === 'pending' ? 'Pending Verification' : 'Unverified' }}
+        <span class="status-badge" [ngClass]="getStatusClass(selectedInst())" style="margin-bottom: 16px; display: inline-block;">
+          {{ getStatusLabel(selectedInst()) }}
         </span>
 
         <div class="detail-grid">

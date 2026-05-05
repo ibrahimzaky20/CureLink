@@ -113,6 +113,19 @@
                 <p class="verified-desc">Your credentials have been verified by our team. You can request medications.</p>
               </div>
             </div>
+          } @else if (verificationStatus() === 'rejected') {
+            <div class="verified-banner rejected">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="#dc2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+              <div>
+                <p class="verified-title">{{ statusLabel() }}</p>
+                <p class="verified-desc">Your institution verification was rejected. Please review your documents and contact support.</p>
+              </div>
+            </div>
           } @else {
             <div class="verified-banner pending">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -130,8 +143,8 @@
           <div class="docs-section">
             <div class="docs-heading"><span>Supporting Documents</span></div>
 
-            @if ((profile()?.documents?.length ?? 0) > 0) {
-              @for (doc of profile()?.documents; track doc.name) {
+            @if (documents().length > 0) {
+              @for (doc of documents(); track doc._id) {
                 <div class="doc-row">
                   <div class="doc-left">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -139,18 +152,53 @@
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                       <polyline points="14 2 14 8 20 8"/>
                     </svg>
-                    <span class="doc-name">{{ doc.name || doc.type || 'Document' }}</span>
+                    <span class="doc-name">{{ doc.type | titlecase }}</span>
                   </div>
-                  @if (doc.verified) {
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                      stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                  }
+                  <a class="doc-view" [href]="doc.file" target="_blank" rel="noopener">View</a>
                 </div>
               }
             } @else {
               <p class="docs-empty">No documents uploaded yet.</p>
+            }
+
+            @if (!allDocsUploaded()) {
+              <p class="docs-warning">Some required documents are still missing. Please upload all documents to complete verification.</p>
+
+              <div class="doc-upload-group">
+                <div class="doc-upload-field">
+                  <span class="doc-upload-label">Tax Card</span>
+                  <label class="btn-upload">
+                    <input type="file" accept="image/*,.pdf" (change)="onTaxCardSelected($event)" hidden />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    {{ taxCardFile() ? taxCardFile()!.name : 'Choose File' }}
+                  </label>
+                </div>
+                <div class="doc-upload-field">
+                  <span class="doc-upload-label">License Number</span>
+                  <label class="btn-upload">
+                    <input type="file" accept="image/*,.pdf" (change)="onLicenseSelected($event)" hidden />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    {{ licenseFile() ? licenseFile()!.name : 'Choose File' }}
+                  </label>
+                </div>
+              </div>
+              @if (taxCardFile() || licenseFile()) {
+                <button class="btn-upload-submit" (click)="uploadDocuments()" [disabled]="uploading()">
+                  {{ uploading() ? 'Uploading...' : 'Upload Documents' }}
+                </button>
+              }
+              @if (uploadError()) { <p class="server-error">{{ uploadError() }}</p> }
+              @if (uploadSuccess()) { <p class="server-success">{{ uploadSuccess() }}</p> }
             }
           </div>
         </div>

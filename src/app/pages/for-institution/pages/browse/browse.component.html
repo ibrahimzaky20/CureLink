@@ -47,10 +47,14 @@
               <span class="verified-badge">VERIFIED</span>
             }
             <div class="med-image">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                stroke="#64748B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-              </svg>
+              @if (d.images?.length) {
+                <img [src]="d.images![0].url" [alt]="medicineOf(d).name ?? 'Donation'" />
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                  stroke="#64748B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                </svg>
+              }
             </div>
             <div class="med-info">
               <h3>{{ medicineOf(d).name || 'Unknown medicine' }}</h3>
@@ -94,12 +98,27 @@
         } @else {
           <!-- Hero -->
           <div class="modal-hero">
-            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none"
-              stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-            </svg>
+            @if (selected()!.images?.length) {
+              <img class="hero-img" [src]="selected()!.images![activeImgIndex()].url" [alt]="medicineOf(selected()!).name ?? 'Donation'" />
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none"
+                stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              </svg>
+            }
             <span class="status-chip" [attr.data-status]="selected()!.status">{{ selected()!.status }}</span>
           </div>
+
+          <!-- Thumbnails -->
+          @if ((selected()!.images?.length ?? 0) > 1) {
+            <div class="donation-images">
+              @for (img of selected()!.images!; track img._id; let i = $index) {
+                <button class="donation-img-wrap" [class.active]="i === activeImgIndex()" (click)="activeImgIndex.set(i)">
+                  <img [src]="img.url" [alt]="img.caption ?? 'Donation image'" />
+                </button>
+              }
+            </div>
+          }
 
           <!-- Title -->
           <div class="modal-title">

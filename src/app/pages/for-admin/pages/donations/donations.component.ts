@@ -23,7 +23,10 @@ export class DonationsComponent implements OnInit {
   showStatusModal  = signal(false);
   showDeleteModal  = signal(false);
   showReviewModal  = signal(false);
+  showDetailModal  = signal(false);
   selectedDonation = signal<any>(null);
+  detailDonation   = signal<any>(null);
+  activeImgIndex   = signal(0);
   newStatus        = signal('');
   statusNotes      = signal('');
   reviewAction     = signal<'approve' | 'reject'>('approve');
@@ -78,6 +81,19 @@ export class DonationsComponent implements OnInit {
     if (p < 1 || p > this.totalPages()) return;
     this.page.set(p);
     this.load();
+  }
+
+  // ── Detail view ──
+
+  viewDetails(donation: any) {
+    this.detailDonation.set(donation);
+    this.activeImgIndex.set(0);
+    this.showDetailModal.set(true);
+  }
+
+  closeDetailModal() {
+    this.showDetailModal.set(false);
+    this.detailDonation.set(null);
   }
 
   // ── Review (approve / reject) ──

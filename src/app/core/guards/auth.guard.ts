@@ -29,6 +29,19 @@ export const institutionGuard: CanActivateFn = () => {
   return false;
 };
 
+export const verifiedInstitutionGuard: CanActivateFn = () => {
+  if (!isPlatformBrowser(inject(PLATFORM_ID))) return true;
+
+  const auth   = inject(AuthServiceService);
+  const router = inject(Router);
+
+  const user = auth.currentUser();
+  if (user?.institution?.verificationStatus === 'verified') return true;
+
+  router.navigate(['/for-institution/institution-profile']);
+  return false;
+};
+
 export const superadminGuard: CanActivateFn = () => {
   if (!isPlatformBrowser(inject(PLATFORM_ID))) return true;
 

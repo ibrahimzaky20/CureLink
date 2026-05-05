@@ -98,10 +98,16 @@ export class LoginComponent implements OnInit {
         }
 
         if (user.role === 'institution') {
-          if (user.isVerified) {
+          if (!user.isVerified) {
+            this.auth.savePendingReg(user.email, user.role);
+            this.router.navigate(['/auth/verify-email'], { queryParams: { email: user.email } });
+            return;
+          }
+          const status = res?.data?.institution?.verificationStatus;
+          if (status === 'verified') {
             this.router.navigate(['/for-institution']);
           } else {
-            this.serverError.set('Your institution is pending admin approval. You will be notified once verified.');
+            this.router.navigate(['/for-institution/institution-profile']);
           }
         }
       },

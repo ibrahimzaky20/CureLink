@@ -15,6 +15,7 @@ export interface AuthUser {
     _id: string;
     name: string;
     isVerified: boolean;
+    verificationStatus: 'pending' | 'verified' | 'rejected';
   };
 }
 
@@ -127,7 +128,12 @@ export class AuthServiceService {
         const token = res?.data?.accessToken;
         if (token) this.saveToken(token);
         const user = res?.data?.user;
-        if (user) this.saveUser(user);
+        if (user) {
+          if (res?.data?.institution) {
+            user.institution = { ...user.institution, ...res.data.institution };
+          }
+          this.saveUser(user);
+        }
       })
     );
   }

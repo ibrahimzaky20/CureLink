@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { donorGuard, institutionGuard, superadminGuard, superadminOnlyGuard } from './core/guards/auth.guard';
+import { donorGuard, institutionGuard, verifiedInstitutionGuard, superadminGuard, superadminOnlyGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -74,14 +74,17 @@ export const routes: Routes = [
       },
       {
         path: 'browse',
+        canActivate: [verifiedInstitutionGuard],
         loadComponent: () => import('./pages/for-institution/pages/browse/browse.component').then(m => m.BrowseComponent)
       },
       {
         path: 'new-request',
+        canActivate: [verifiedInstitutionGuard],
         loadComponent: () => import('./pages/for-institution/pages/new-request/new-request.component').then(m => m.NewRequestComponent)
       },
       {
         path: 'my-requests',
+        canActivate: [verifiedInstitutionGuard],
         loadComponent: () => import('./pages/for-institution/pages/my-requests/my-requests.component').then(m => m.MyRequestsComponent)
       },
       {

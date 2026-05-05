@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthServiceService } from '../../../core/services/auth/auth-service.service';
+import { InstitutionService } from '../../../core/services/institution/institution.service';
 import { switchMap } from 'rxjs';
 
 @Component({
@@ -13,6 +14,7 @@ import { switchMap } from 'rxjs';
 export class RegisterInstitutionComponent {
   private readonly fb   = inject(FormBuilder);
   private readonly auth = inject(AuthServiceService);
+  private readonly instApi = inject(InstitutionService);
 
   logoFileName     = signal('');
   documentFileName = signal('');
@@ -75,8 +77,8 @@ export class RegisterInstitutionComponent {
       // Step 2: Upload verification document if provided
       switchMap(() => {
         const doc = this.documentFile();
-        if (doc) return this.auth.addDocuments(doc);
-        return [null]; // skip if no document
+        if (doc) return this.instApi.uploadDocuments(doc, null);
+        return [null];
       })
     ).subscribe({
       next: () => {
