@@ -1,11 +1,11 @@
 @keyframes slideFromLeft {
   from {
     opacity: 0;
-    transform: translateY(calc(-50% - 31.5px)) translateX(-80px);
+    transform: translateX(-80px);
   }
   to {
     opacity: 1;
-    transform: translateY(calc(-50% - 31.5px)) translateX(0);
+    transform: translateX(0);
   }
 }
 
@@ -37,12 +37,13 @@
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 140px 0 0;
 
   &__content {
-    position: absolute;
-    top: 50%;
-    left: 80px;
-    transform: translateY(calc(-50% - 31.5px));
+    margin-left: 80px;
     width: 721px;
     display: flex;
     flex-direction: column;
@@ -171,9 +172,9 @@
 
   // Stats bar — bottom left
   &__stats {
-    position: absolute;
-    bottom: 65px;
-    left: 80px;
+    margin-top: auto;
+    margin-left: 80px;
+    margin-bottom: 65px;
     display: flex;
     gap: 20px;
     width: 721px;
@@ -251,10 +252,6 @@
     padding: 160px 20px 40px;
 
     &__content {
-      position: relative;
-      top: auto;
-      left: auto;
-      transform: none;
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
@@ -285,12 +282,10 @@
     }
 
     &__stats {
-      position: relative;
-      bottom: auto;
-      left: auto;
       width: 100%;
       max-width: 710px;
       margin: 48px auto 0;
+      margin-bottom: 0;
       flex-wrap: wrap;
       justify-content: center;
     }
