@@ -34,7 +34,7 @@
 .hero {
   position: relative;
   background: #ebf7fa;
-  height: 872px;
+  height: 100vh;
   overflow: hidden;
 
   &__content {
@@ -135,7 +135,7 @@
     top: 0;
     left: calc(58.33% - 4px);
     width: 857px;
-    height: 872px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
