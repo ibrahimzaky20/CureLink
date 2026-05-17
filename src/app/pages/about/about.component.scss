@@ -1,7 +1,8 @@
 .placeholder-page {
-  min-height: calc(100vh - 88px - 200px);
+  min-height: calc(100vh - 200px);
   display: flex;
   align-items: center;
+  padding-top: 160px;
 
   &__inner {
     padding: 80px 0;

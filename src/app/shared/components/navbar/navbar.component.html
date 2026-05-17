@@ -1,7 +1,11 @@
 <header class="navbar">
-  <div class="container navbar__inner">
+  <div class="navbar__inner">
     <!-- Logo -->
-    <a routerLink="/" class="navbar__logo">CureLink</a>
+    <a routerLink="/" class="navbar__logo">
+      <span class="navbar__logo-text">Cure</span>
+      <img src="caduceus-logo.svg" alt="" class="navbar__logo-icon" />
+      <span class="navbar__logo-text">Link</span>
+    </a>
 
     <!-- Desktop Nav -->
     <nav class="navbar__links" aria-label="Main navigation">
@@ -19,7 +23,7 @@
     <!-- CTA / User -->
     <div class="navbar__actions">
       @if (!user()) {
-        <a routerLink="/auth/login" class="btn btn-secondary navbar__btn">Sign In</a>
+        <a routerLink="/auth/login" class="btn btn-secondary navbar__btn">Sign in</a>
         <a routerLink="/auth/register" class="btn btn-primary navbar__btn">Get Started</a>
       } @else {
         <div class="navbar__user">
@@ -61,7 +65,7 @@
       }
       <div class="navbar__mobile-actions">
         @if (!user()) {
-          <a routerLink="/auth/login"    class="btn btn-secondary w-full text-center" (click)="toggleMobile()">Sign In</a>
+          <a routerLink="/auth/login"    class="btn btn-secondary w-full text-center" (click)="toggleMobile()">Sign in</a>
           <a routerLink="/auth/register" class="btn btn-primary w-full text-center"   (click)="toggleMobile()">Get Started</a>
         } @else {
           <div class="navbar__mobile-user">
