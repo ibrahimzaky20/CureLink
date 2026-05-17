@@ -13,8 +13,6 @@
         <a
           [routerLink]="item.route"
           [fragment]="item.fragment"
-          routerLinkActive="navbar__link--active"
-          [routerLinkActiveOptions]="{ exact: item.route === '/' && !item.fragment }"
           class="navbar__link"
         >{{ item.label }}</a>
       }
