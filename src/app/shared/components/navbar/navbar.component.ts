@@ -1,6 +1,6 @@
 
 import { Component, signal, computed, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthServiceService } from '../../../core/services/auth/auth-service.service';
 
 interface NavItem {
@@ -11,7 +11,7 @@ interface NavItem {
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
